@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Chipmunk2D
 {
-	enum cpBodyType
+	enum BodyType
 	{
 		/// A dynamic body is one that is affected by gravity, forces, and collisions.
 		/// This is the default body type.
@@ -19,12 +19,12 @@ namespace Chipmunk2D
 		Static,
 	}
 
-	class cpBody : cpObject
+	class Body : ObjectBase
 	{
-		private List<cpShape> shapes = new List<cpShape>() ~ delete _;
+		private List<Shape> shapes = new List<Shape>() ~ delete _;
 		private bool canFree;
 
-		public cpBodyType BodyType
+		public BodyType BodyType
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect Position
+		public Vector2 Position
 		{
 			get
 			{
@@ -74,7 +74,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect CenterOfGravity
+		public Vector2 CenterOfGravity
 		{
 			get
 			{
@@ -86,7 +86,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect Velocity
+		public Vector2 Velocity
 		{
 			get
 			{
@@ -98,7 +98,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect Force
+		public Vector2 Force
 		{
 			get
 			{
@@ -146,11 +146,11 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect Rotation => cpBodyGetRotation(handle);
+		public Vector2 Rotation => cpBodyGetRotation(handle);
 
 		public float KineticEnergy => cpBodyKineticEnergy(handle);
 
-		public this(cpBodyType type, float mass = 0.0f, float moment = 0.0f)
+		public this(BodyType type, float mass = 0.0f, float moment = 0.0f)
 		{
 			switch (type) {
 			case .Static:
@@ -196,80 +196,80 @@ namespace Chipmunk2D
 			cpBodySleep(handle);
 		}
 
-		public cpShape AddBoxShape(float width, float height, float radius)
+		public Shape AddBoxShape(float width, float height, float radius)
 		{
-			var shape = new cpBoxShape(cpBoxShapeNew(handle, width, height, radius));
+			var shape = new BoxShape(cpBoxShapeNew(handle, width, height, radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
 		}
 
-		public cpShape AddPolyShape(cpVect[] verts, float radius)
+		public Shape AddPolyShape(Vector2[] verts, float radius)
 		{
-			var shape = new cpPolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius));
+			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
 		}
 
-		public cpShape AddCircleShape(float radius, cpVect offset = cpVect.Zero)
+		public Shape AddCircleShape(float radius, Vector2 offset = Vector2.Zero)
 		{
-			var shape = new cpCircleShape(cpCircleShapeNew(handle, radius, offset));
+			var shape = new CircleShape(cpCircleShapeNew(handle, radius, offset));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
 		}
 
-		public cpShape AddSegmentShape(cpVect a, cpVect b, float radius)
+		public Shape AddSegmentShape(Vector2 a, Vector2 b, float radius)
 		{
-			var shape = new cpSegmentShape(cpSegmentShapeNew(handle, a, b, radius));
+			var shape = new SegmentShape(cpSegmentShapeNew(handle, a, b, radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
 		}
 
-		public void RemoveShape(cpShape shape)
+		public void RemoveShape(Shape shape)
 		{
 			shapes.Remove(shape);
 			cpSpaceRemoveShape(cpBodyGetSpace(handle), shape.Handle);
 		}
 
-		public cpVect TransformLocalToWorld(cpVect point)
+		public Vector2 TransformLocalToWorld(Vector2 point)
 		{
 			return cpBodyLocalToWorld(handle, point);
 		}
 
-		public cpVect TransformWorldToLocal(cpVect point)
+		public Vector2 TransformWorldToLocal(Vector2 point)
 		{
 			return cpBodyWorldToLocal(handle, point);
 		}
 
-		public void ApplyForceAtWorldPoint(cpVect force, cpVect point)
+		public void ApplyForceAtWorldPoint(Vector2 force, Vector2 point)
 		{
 			cpBodyApplyForceAtWorldPoint(handle, force, point);
 		}
 
-		public void ApplyForceAtLocalPoint(cpVect force, cpVect point)
+		public void ApplyForceAtLocalPoint(Vector2 force, Vector2 point)
 		{
 			cpBodyApplyForceAtLocalPoint(handle, force, point);
 		}
 
-		public void ApplyImpulseAtWorldPoint(cpVect impulse, cpVect point)
+		public void ApplyImpulseAtWorldPoint(Vector2 impulse, Vector2 point)
 		{
 			cpBodyApplyImpulseAtWorldPoint(handle, impulse, point);
 		}
 
-		public void ApplyImpulseAtLocalPoint(cpVect impulse, cpVect point)
+		public void ApplyImpulseAtLocalPoint(Vector2 impulse, Vector2 point)
 		{
 			cpBodyApplyImpulseAtLocalPoint(handle, impulse, point);
 		}
 
-		public cpVect GetVelocityAtWorldPoint(cpVect point)
+		public Vector2 GetVelocityAtWorldPoint(Vector2 point)
 		{
 			return cpBodyGetVelocityAtWorldPoint(handle, point);
 		}
 
-		public cpVect GetVelocityAtLocalPoint(cpVect point)
+		public Vector2 GetVelocityAtLocalPoint(Vector2 point)
 		{
 			return cpBodyGetVelocityAtLocalPoint(handle, point);
 		}
@@ -280,13 +280,13 @@ namespace Chipmunk2D
 			list.Add(shape);
 		}
 
-		public void EachShape(delegate void(cpShape shape) func)
+		public void EachShape(delegate void(Shape shape) func)
 		{
 			var shapes = scope List<void*>();
 			cpBodyEachShape(handle, => OnEachShape, Internal.UnsafeCastToPtr(shapes));
 			for (var shape in shapes)
 			{
-				func(Internal.UnsafeCastToObject(shape) as cpShape);
+				func(Internal.UnsafeCastToObject(shape) as Shape);
 			}
 		}
 
@@ -296,13 +296,13 @@ namespace Chipmunk2D
 			list.Add(constraint);
 		}
 
-		public void EachConstraint(delegate void(cpConstraint shape) func)
+		public void EachConstraint(delegate void(Constraint shape) func)
 		{
 			var constraints = scope List<void*>();
 			cpBodyEachShape(handle, => OnEachConstraint, Internal.UnsafeCastToPtr(shapes));
 			for (var constraint in constraints)
 			{
-				func(Internal.UnsafeCastToObject(constraint) as cpConstraint);
+				func(Internal.UnsafeCastToObject(constraint) as Constraint);
 			}
 		}
 
@@ -312,27 +312,27 @@ namespace Chipmunk2D
 			list.Add(arbiter);
 		}
 
-		public void EachArbiter(delegate void(cpArbiter shape) func)
+		public void EachArbiter(delegate void(Arbiter shape) func)
 		{
 			var arbiters = scope List<void*>();
 			cpBodyEachShape(handle, => OnEachArbiter, Internal.UnsafeCastToPtr(shapes));
 			for (var arbiter in arbiters)
 			{
-				func(cpArbiter(arbiter));
+				func(Arbiter(arbiter));
 			}
 		}
 
 		[CLink]
 		private static extern void* cpBodyNew(float mass, float moment);
 
-		/// Allocate and initialize a cpBody, and set it as a kinematic body.
+		/// Allocate and initialize a Body, and set it as a kinematic body.
 		[CLink]
 		private static extern void* cpBodyNewKinematic();
-		/// Allocate and initialize a cpBody, and set it as a static body.
+		/// Allocate and initialize a Body, and set it as a static body.
 		[CLink]
 		private static extern void* cpBodyNewStatic();
 
-		/// Destroy and free a cpBody.
+		/// Destroy and free a Body.
 		[CLink]
 		private static extern void cpBodyFree(void* body);
 
@@ -349,14 +349,14 @@ namespace Chipmunk2D
 
 		/// Get the type of the body.
 		[CLink]
-		private static extern cpBodyType cpBodyGetType(void* body);
+		private static extern BodyType cpBodyGetType(void* body);
 		/// Set the type of the body.
 		[CLink]
-		private static extern void cpBodySetType(void* body, cpBodyType type);
+		private static extern void cpBodySetType(void* body, BodyType type);
 
 		/// Get the space this body is added to.
 		[CLink]
-		private static extern cpSpace* cpBodyGetSpace(void* body);
+		private static extern Space* cpBodyGetSpace(void* body);
 
 		/// Get the mass of the body.
 		[CLink]
@@ -374,31 +374,31 @@ namespace Chipmunk2D
 
 		/// Set the position of a body.
 		[CLink]
-		private static extern cpVect cpBodyGetPosition(void* body);
+		private static extern Vector2 cpBodyGetPosition(void* body);
 		/// Set the position of the body.
 		[CLink]
-		private static extern void cpBodySetPosition(void* body, cpVect pos);
+		private static extern void cpBodySetPosition(void* body, Vector2 pos);
 
 		/// Get the offset of the center of gravity in body local coordinates.
 		[CLink]
-		private static extern cpVect cpBodyGetCenterOfGravity(void* body);
+		private static extern Vector2 cpBodyGetCenterOfGravity(void* body);
 		/// Set the offset of the center of gravity in body local coordinates.
 		[CLink]
-		private static extern void cpBodySetCenterOfGravity(void* body, cpVect cog);
+		private static extern void cpBodySetCenterOfGravity(void* body, Vector2 cog);
 
 		/// Get the velocity of the body.
 		[CLink]
-		private static extern cpVect cpBodyGetVelocity(void* body);
+		private static extern Vector2 cpBodyGetVelocity(void* body);
 		/// Set the velocity of the body.
 		[CLink]
-		private static extern void cpBodySetVelocity(void* body, cpVect velocity);
+		private static extern void cpBodySetVelocity(void* body, Vector2 velocity);
 
 		/// Get the force applied to the body for the next time step.
 		[CLink]
-		private static extern cpVect cpBodyGetForce(void* body);
+		private static extern Vector2 cpBodyGetForce(void* body);
 		/// Set the force applied to the body for the next time step.
 		[CLink]
-		private static extern void cpBodySetForce(void* body, cpVect force);
+		private static extern void cpBodySetForce(void* body, Vector2 force);
 
 		/// Get the angle of the body.
 		[CLink]
@@ -423,7 +423,7 @@ namespace Chipmunk2D
 
 		/// Get the rotation vector of the body. (The x basis vector of it's transform.)
 		[CLink]
-		private static extern cpVect cpBodyGetRotation(void* body);
+		private static extern Vector2 cpBodyGetRotation(void* body);
 
 		/// Get the user data pointer assigned to the body.
 		[CLink]
@@ -434,38 +434,38 @@ namespace Chipmunk2D
 
 		/// Default velocity integration function..
 		[CLink]
-		private static extern void cpBodyUpdateVelocity(void* body, cpVect gravity, float damping, float dt);
+		private static extern void cpBodyUpdateVelocity(void* body, Vector2 gravity, float damping, float dt);
 		/// Default position integration function.
 		[CLink]
 		private static extern void cpBodyUpdatePosition(void* body, float dt);
 
 		/// Convert body relative/local coordinates to absolute/world coordinates.
 		[CLink]
-		private static extern cpVect cpBodyLocalToWorld(void* body, cpVect point);
+		private static extern Vector2 cpBodyLocalToWorld(void* body, Vector2 point);
 		/// Convert body absolute/world coordinates to  relative/local coordinates.
 		[CLink]
-		private static extern cpVect cpBodyWorldToLocal(void* body, cpVect point);
+		private static extern Vector2 cpBodyWorldToLocal(void* body, Vector2 point);
 
 		/// Apply a force to a body. Both the force and point are expressed in world coordinates.
 		[CLink]
-		private static extern void cpBodyApplyForceAtWorldPoint(void* body, cpVect force, cpVect point);
+		private static extern void cpBodyApplyForceAtWorldPoint(void* body, Vector2 force, Vector2 point);
 		/// Apply a force to a body. Both the force and point are expressed in body local coordinates.
 		[CLink]
-		private static extern void cpBodyApplyForceAtLocalPoint(void* body, cpVect force, cpVect point);
+		private static extern void cpBodyApplyForceAtLocalPoint(void* body, Vector2 force, Vector2 point);
 
 		/// Apply an impulse to a body. Both the impulse and point are expressed in world coordinates.
 		[CLink]
-		private static extern void cpBodyApplyImpulseAtWorldPoint(void* body, cpVect impulse, cpVect point);
+		private static extern void cpBodyApplyImpulseAtWorldPoint(void* body, Vector2 impulse, Vector2 point);
 		/// Apply an impulse to a body. Both the impulse and point are expressed in body local coordinates.
 		[CLink]
-		private static extern void cpBodyApplyImpulseAtLocalPoint(void* body, cpVect impulse, cpVect point);
+		private static extern void cpBodyApplyImpulseAtLocalPoint(void* body, Vector2 impulse, Vector2 point);
 
 		/// Get the velocity on a body (in world units) at a point on the body in world coordinates.
 		[CLink]
-		private static extern cpVect cpBodyGetVelocityAtWorldPoint(void* body, cpVect point);
+		private static extern Vector2 cpBodyGetVelocityAtWorldPoint(void* body, Vector2 point);
 		/// Get the velocity on a body (in world units) at a point on the body in local coordinates.
 		[CLink]
-		private static extern cpVect cpBodyGetVelocityAtLocalPoint(void* body, cpVect point);
+		private static extern Vector2 cpBodyGetVelocityAtLocalPoint(void* body, Vector2 point);
 
 		/// Get the amount of kinetic energy contained by the body.
 		[CLink]
@@ -496,7 +496,7 @@ namespace Chipmunk2D
 		/// Allocate and initialize a polygon shape with rounded corners.
 		/// The vertexes must be convex with a counter-clockwise winding.
 		[CLink]
-		private static extern void* cpPolyShapeNewRaw(void* body, int32 count, cpVect* verts, float radius);
+		private static extern void* cpPolyShapeNewRaw(void* body, int32 count, Vector2* verts, float radius);
 
 		/// Allocate and initialize a box shaped polygon shape.
 		[CLink]
@@ -505,11 +505,11 @@ namespace Chipmunk2D
 
 		/// Allocate and initialize a circle shape.
 		[CLink]
-		private static extern void* cpCircleShapeNew(void* body, float radius, cpVect offset);
+		private static extern void* cpCircleShapeNew(void* body, float radius, Vector2 offset);
 
 		/// Allocate and initialize a segment shape.
 		[CLink]
-		private static extern void* cpSegmentShapeNew(void* body, cpVect a, cpVect b, float radius);
+		private static extern void* cpSegmentShapeNew(void* body, Vector2 a, Vector2 b, float radius);
 
 	}
 }

@@ -3,11 +3,11 @@ using System;
 namespace Chipmunk2D
 {
 	[CRepr]
-	struct cpBB
+	struct Bounds
 	{
 		float l , b , r , t;
 
-		public cpVect Center => cpVect.Lerp(cpVect(l, b), cpVect(r, t), 0.5f);
+		public Vector2 Center => Vector2.Lerp(Vector2(l, b), Vector2(r, t), 0.5f);
 
 		/// Returns the area of the bounding box.
 		public float Area => (r - l) * (t - b);
@@ -25,7 +25,7 @@ namespace Chipmunk2D
 			t = _t;
 		}
 
-		public this(cpVect c, float hw, float hh)
+		public this(Vector2 c, float hw, float hh)
 		{
 			l = c.x - hw;
 			b = c.y - hh;
@@ -34,7 +34,7 @@ namespace Chipmunk2D
 		}
 
 
-		public this(cpVect c, float radius)
+		public this(Vector2 c, float radius)
 		{
 			l = c.x - radius;
 			b = c.y - radius;
@@ -47,13 +47,13 @@ namespace Chipmunk2D
 			strBuffer.AppendF("({0}, {1}, {2}, {3})", l, b, r, t);
 		}
 
-		public static float MergedArea(cpBB a, cpBB b)
+		public static float MergedArea(Bounds a, Bounds b)
 		{
 			return (Math.Max(a.r, b.r) - Math.Min(a.l, b.l)) * (Math.Max(a.t, b.t) - Math.Min(a.b, b.b));
 		}
 
 		/// Transform a cpBB.
-		public static cpBB operator*(cpTransform t, cpBB bb)
+		public static Bounds operator*(Transform t, Bounds bb)
 		{
 			var center = bb.Center;
 			var hw = (bb.r - bb.l) * 0.5f;
@@ -62,7 +62,7 @@ namespace Chipmunk2D
 			var a = t.a * hw, b = t.c * hh, d = t.b * hw, e = t.d * hh;
 			var hw_max = Math.Max(Math.Abs(a + b), Math.Abs(a - b));
 			var hh_max = Math.Max(Math.Abs(d + e), Math.Abs(d - e));
-			return cpBB(t * center, hw_max, hh_max);
+			return Bounds(t * center, hw_max, hh_max);
 		}
 
 	}

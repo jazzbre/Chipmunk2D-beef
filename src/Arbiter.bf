@@ -2,22 +2,22 @@ using System;
 
 namespace Chipmunk2D
 {
-	struct cpArbiterBodyInfo
+	struct ArbiterBodyInfo
 	{
-		public cpBody bodyA , bodyB;
+		public Body bodyA , bodyB;
 	}
 
-	struct cpArbiterShapeInfo
+	struct ArbiterShapeInfo
 	{
-		public cpShape shapeA , shapeB;
+		public Shape shapeA , shapeB;
 	}
 
 	[CRepr]
-	struct cpContactPoint
+	struct ContactPoint
 	{
 		/// The position of the contact on the surface of each shape.
-		public cpVect pointA;
-		public cpVect pointB;
+		public Vector2 pointA;
+		public Vector2 pointB;
 		/// Penetration distance of the two shapes. Overlapping means it will be negative.
 		/// This value is calculated as cpvdot(cpvsub(point2, point1), normal) and is ignored by
 		// cpArbiterSetContactPointSet().
@@ -26,19 +26,19 @@ namespace Chipmunk2D
 
 	/// A struct that wraps up the important collision data for an arbiter.
 	[CRepr]
-	struct cpContactPointSet
+	struct ContactPointSet
 	{
 		/// The number of contact points in the set.
 		int32 count;
 
 		/// The normal of the collision.
-		cpVect normal;
+		Vector2 normal;
 
 		/// The array of contact points.
-		cpContactPoint[2] points;
+		ContactPoint[2] points;
 	}
 
-	struct cpArbiter
+	struct Arbiter
 	{
 		private void* handle = null;
 
@@ -72,7 +72,7 @@ namespace Chipmunk2D
 		}
 
 
-		public cpVect SurfaceVelocity
+		public Vector2 SurfaceVelocity
 		{
 			get
 			{
@@ -84,7 +84,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect TotalImpulse
+		public Vector2 TotalImpulse
 		{
 			get
 			{
@@ -108,27 +108,27 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpArbiterBodyInfo Bodies
+		public ArbiterBodyInfo Bodies
 		{
 			get
 			{
 				void* a = ?;
 				void* b = ?;
 				cpArbiterGetBodies(handle, &a, &b);
-				var bodyInfo = cpArbiterBodyInfo() { bodyA = Internal.UnsafeCastToObject(a) as cpBody, bodyB = Internal.UnsafeCastToObject(b) as cpBody };
+				var bodyInfo = ArbiterBodyInfo() { bodyA = Internal.UnsafeCastToObject(a) as Body, bodyB = Internal.UnsafeCastToObject(b) as Body };
 				return bodyInfo;
 			}
 		}
 
 
-		public cpArbiterShapeInfo Shapes
+		public ArbiterShapeInfo Shapes
 		{
 			get
 			{
 				void* a = ?;
 				void* b = ?;
 				cpArbiterGetShapes(handle, &a, &b);
-				var shapeInfo = cpArbiterShapeInfo() { shapeA = Internal.UnsafeCastToObject(a) as cpShape, shapeB = Internal.UnsafeCastToObject(b) as cpShape };
+				var shapeInfo = ArbiterShapeInfo() { shapeA = Internal.UnsafeCastToObject(a) as Shape, shapeB = Internal.UnsafeCastToObject(b) as Shape };
 				return shapeInfo;
 			}
 		}
@@ -140,13 +140,13 @@ namespace Chipmunk2D
 
 		public int Count => cpArbiterGetCount(handle);
 
-		public cpVect Normal => cpArbiterGetNormal(handle);
+		public Vector2 Normal => cpArbiterGetNormal(handle);
 
-		public cpContactPoint this[int index]
+		public ContactPoint this[int index]
 		{
 			get
 			{
-				var contactPoint = cpContactPoint();
+				var contactPoint = ContactPoint();
 				contactPoint.pointA = cpArbiterGetPointA(handle, (int32)index);
 				contactPoint.pointB = cpArbiterGetPointB(handle, (int32)index);
 				contactPoint.distance = cpArbiterGetDepth(handle, (int32)index);
@@ -154,7 +154,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpContactPointSet ContactPointSet
+		public ContactPointSet ContactPointSet
 		{
 			get
 			{
@@ -182,13 +182,13 @@ namespace Chipmunk2D
 
 		// Get the relative surface velocity of the two shapes in contact.
 		[CLink]
-		private static extern cpVect cpArbiterGetSurfaceVelocity(void* arb);
+		private static extern Vector2 cpArbiterGetSurfaceVelocity(void* arb);
 
 		// Override the relative surface velocity of the two shapes in contact.
 		// By default this is calculated to be the difference of the two surface velocities clamped to the tangent
 		// plane.
 		[CLink]
-		private static extern void cpArbiterSetSurfaceVelocity(void* arb, cpVect vr);
+		private static extern void cpArbiterSetSurfaceVelocity(void* arb, Vector2 vr);
 
 		/// Get the user data pointer associated with this pair of colliding objects.
 		[CLink]
@@ -202,7 +202,7 @@ namespace Chipmunk2D
 		/// Calculate the total impulse including the friction that was applied by this arbiter.
 		/// This function should only be called from a post-solve, post-step or cpBodyEachArbiter callback.
 		[CLink]
-		private static extern cpVect cpArbiterTotalImpulse(void* arb);
+		private static extern Vector2 cpArbiterTotalImpulse(void* arb);
 		/// Calculate the amount of energy lost in a collision including static, but not dynamic friction.
 		/// This function should only be called from a post-solve, post-step or cpBodyEachArbiter callback.
 		[CLink]
@@ -214,25 +214,25 @@ namespace Chipmunk2D
 		private static extern bool cpArbiterIgnore(void* arb);
 
 		/// Return the colliding shapes involved for this arbiter.
-		/// The order of their cpSpace.collision_type values will match
+		/// The order of their Space.collision_type values will match
 		/// the order set when the collision handler was registered.
 		[CLink]
 		private static extern void cpArbiterGetShapes(void* arb, void** a, void** b);
 
 		/// Return the colliding bodies involved for this arbiter.
-		/// The order of the cpSpace.collision_type the bodies are associated with values will match
+		/// The order of the Space.collision_type the bodies are associated with values will match
 		/// the order set when the collision handler was registered.
 		[CLink]
 		private static extern void cpArbiterGetBodies(void* arb, void** a, void** b);
 
 		/// Return a contact set from an arbiter.
 		[CLink]
-		private static extern cpContactPointSet cpArbiterGetContactPointSet(void* arb);
+		private static extern ContactPointSet cpArbiterGetContactPointSet(void* arb);
 
 		/// Replace the contact point set for an arbiter.
 		/// This can be a very powerful feature, but use it with caution!
 		[CLink]
-		private static extern void cpArbiterSetContactPointSet(void* arb, cpContactPointSet* set);
+		private static extern void cpArbiterSetContactPointSet(void* arb, ContactPointSet* set);
 
 		/// Returns true if this is the first step a pair of objects started colliding.
 		[CLink]
@@ -246,13 +246,13 @@ namespace Chipmunk2D
 		private static extern int32 cpArbiterGetCount(void* arb);
 		/// Get the normal of the collision.
 		[CLink]
-		private static extern cpVect cpArbiterGetNormal(void* arb);
+		private static extern Vector2 cpArbiterGetNormal(void* arb);
 		/// Get the position of the @c ith contact point on the surface of the first shape.
 		[CLink]
-		private static extern cpVect cpArbiterGetPointA(void* arb, int32 i);
+		private static extern Vector2 cpArbiterGetPointA(void* arb, int32 i);
 		/// Get the position of the @c ith contact point on the surface of the second shape.
 		[CLink]
-		private static extern cpVect cpArbiterGetPointB(void* arb, int32 i);
+		private static extern Vector2 cpArbiterGetPointB(void* arb, int32 i);
 		[CLink]
 		/// Get the depth of the @c ith contact point.
 		private static extern float cpArbiterGetDepth(void* arb, int32 i);

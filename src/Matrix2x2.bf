@@ -3,7 +3,7 @@ using System;
 namespace Chipmunk2D
 {
 	[CRepr]
-	struct cpMat2x2
+	struct Matrix2x2
 	{
 		// Row major [[a, b][c d]]
 		float a , b , c , d;
@@ -21,9 +21,9 @@ namespace Chipmunk2D
 			strBuffer.AppendF("[({0}, {1}), ({2}, {3})]", a, b, c, d);
 		}
 
-		public cpVect TransformVector(cpVect v)
+		public Vector2 TransformVector(Vector2 v)
 		{
-			return cpVect(v.x * a + v.y * b, v.x * c + v.y * d);
+			return Vector2(v.x * a + v.y * b, v.x * c + v.y * d);
 		}
 	}
 }

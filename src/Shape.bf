@@ -6,7 +6,7 @@ namespace Chipmunk2D
 	/// Fast collision filtering type that is used to determine if two objects collide before calling collision or query
 	// callbacks.
 	[CRepr]
-	struct cpShapeFilter
+	struct ShapeFilter
 	{
 		/// Two objects with the same non-zero group value do not collide.
 		/// This is generally used to group objects in a composite object together to disable self collisions.
@@ -19,7 +19,7 @@ namespace Chipmunk2D
 		public uint32 mask = 0xffffffff;
 	}
 
-	abstract class cpShape : cpObject
+	abstract class Shape : ObjectBase
 	{
 		public float Mass
 		{
@@ -49,7 +49,7 @@ namespace Chipmunk2D
 
 		public float Area => cpShapeGetArea(handle);
 
-		public cpBB Bounds => cpShapeGetBB(handle);
+		public Bounds Bounds => cpShapeGetBB(handle);
 
 		public bool Sensor
 		{
@@ -87,7 +87,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpVect SurfaceVelocity
+		public Vector2 SurfaceVelocity
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public cpShapeFilter Filter
+		public ShapeFilter Filter
 		{
 			get
 			{
@@ -135,19 +135,19 @@ namespace Chipmunk2D
 			handle = null;
 		}
 
-		cpBB GetCacheBB()
+		Bounds GetCacheBB()
 		{
 			return cpShapeCacheBB(handle);
 		}
 
-		cpBB GetUpdateBB(cpTransform transform)
+		Bounds GetUpdateBB(Transform transform)
 		{
 			return cpShapeUpdate(handle, transform);
 		}
 
-		float PointQuery(cpVect p, out cpPointQueryInfo info)
+		float PointQuery(Vector2 p, out PointQueryInfo info)
 		{
-			var internalInfo = cpSpace.cpPointQueryInfoInternal();
+			var internalInfo = Space.cpPointQueryInfo();
 			var value = cpShapePointQuery(handle, p, &internalInfo);
 			info.shape = null;
 			info.point = internalInfo.point;
@@ -156,9 +156,9 @@ namespace Chipmunk2D
 			return value;
 		}
 
-		bool SegmentQuery(cpVect a, cpVect b, float radius, out cpSegmentQueryInfo info)
+		bool SegmentQuery(Vector2 a, Vector2 b, float radius, out SegmentQueryInfo info)
 		{
-			var internalInfo = cpSpace.cpSegmentQueryInfoInternal();
+			var internalInfo = Space.cpSegmentQueryInfo();
 			var value = cpShapeSegmentQuery(handle, a, b, radius, &internalInfo);
 			info.shape = null;
 			info.point = internalInfo.point;
@@ -167,7 +167,7 @@ namespace Chipmunk2D
 			return value;
 		}
 
-		public static float MomentForCircle(float m, float r1, float r2, cpVect offset)
+		public static float MomentForCircle(float m, float r1, float r2, Vector2 offset)
 		{
 			return cpMomentForCircle(m, r1, r2, offset);
 		}
@@ -177,27 +177,27 @@ namespace Chipmunk2D
 			return cpAreaForCircle(r1, r2);
 		}
 
-		public static float MomentForSegment(float m, cpVect a, cpVect b, float radius)
+		public static float MomentForSegment(float m, Vector2 a, Vector2 b, float radius)
 		{
 			return MomentForSegment(m, a, b, radius);
 		}
 
-		public static float AreaForSegment(cpVect a, cpVect b, float radius)
+		public static float AreaForSegment(Vector2 a, Vector2 b, float radius)
 		{
 			return cpAreaForSegment(a, b, radius);
 		}
 
-		public static float MomentForPoly(float m, cpVect[] verts, cpVect offset, float radius)
+		public static float MomentForPoly(float m, Vector2[] verts, Vector2 offset, float radius)
 		{
 			return cpMomentForPoly(m, (int32)verts.Count, &verts[0], offset, radius);
 		}
 
-		public static float AreaForPoly(cpVect[] verts, float radius)
+		public static float AreaForPoly(Vector2[] verts, float radius)
 		{
 			return cpAreaForPoly((int32)verts.Count, &verts[0], radius);
 		}
 
-		public static cpVect CentroidForPoly(cpVect[] verts)
+		public static Vector2 CentroidForPoly(Vector2[] verts)
 		{
 			return cpCentroidForPoly((int32)verts.Count, &verts[0]);
 		}
@@ -232,11 +232,11 @@ namespace Chipmunk2D
 		private static extern float cpShapeGetArea(void* shape);
 		/// Get the centroid of this shape.
 		[CLink]
-		private static extern cpVect cpShapeGetCenterOfGravity(void* shape);
+		private static extern Vector2 cpShapeGetCenterOfGravity(void* shape);
 
 		/// Get the bounding box that contains the shape given it's current position and angle.
 		[CLink]
-		private static extern cpBB cpShapeGetBB(void* shape);
+		private static extern Bounds cpShapeGetBB(void* shape);
 
 		/// Get if the shape is set to be a sensor or not.
 		[CLink]
@@ -261,10 +261,10 @@ namespace Chipmunk2D
 
 		/// Get the surface velocity of this shape.
 		[CLink]
-		private static extern cpVect cpShapeGetSurfaceVelocity(void* shape);
+		private static extern Vector2 cpShapeGetSurfaceVelocity(void* shape);
 		/// Set the surface velocity of this shape.
 		[CLink]
-		private static extern void cpShapeSetSurfaceVelocity(void* shape, cpVect surfaceVelocity);
+		private static extern void cpShapeSetSurfaceVelocity(void* shape, Vector2 surfaceVelocity);
 
 		/// Get the user definable data pointer of this shape.
 		[CLink]
@@ -282,29 +282,29 @@ namespace Chipmunk2D
 
 		/// Get the collision filtering parameters of this shape.
 		[CLink]
-		private static extern cpShapeFilter cpShapeGetFilter(void* shape);
+		private static extern ShapeFilter cpShapeGetFilter(void* shape);
 		/// Set the collision filtering parameters of this shape.
-		[CLink] private static extern void cpShapeSetFilter(void* shape, cpShapeFilter filter);
+		[CLink] private static extern void cpShapeSetFilter(void* shape, ShapeFilter filter);
 
 		/// Update, cache and return the bounding box of a shape based on the body it's attached to.
-		[CLink] private static extern cpBB cpShapeCacheBB(void* shape);
+		[CLink] private static extern Bounds cpShapeCacheBB(void* shape);
 		/// Update, cache and return the bounding box of a shape with an explicit transformation.
-		[CLink] private static extern cpBB cpShapeUpdate(void* shape, cpTransform transform);
+		[CLink] private static extern Bounds cpShapeUpdate(void* shape, Transform transform);
 
 		/// Perform a nearest point query. It finds the closest point on the surface of shape to a specific point.
 		/// The value returned is the distance between the points. A negative distance means the point is inside the
 		// shape.
-		[CLink] private static extern float cpShapePointQuery(void* shape, cpVect p, cpSpace.cpPointQueryInfoInternal* outValue);
+		[CLink] private static extern float cpShapePointQuery(void* shape, Vector2 p, Space.cpPointQueryInfo* outValue);
 
 		/// Perform a segment query against a shape. @c info must be a pointer to a valid cpSegmentQueryInfo structure.
-		[CLink] private static extern bool cpShapeSegmentQuery(void* shape, cpVect a, cpVect b, float radius, cpSpace.cpSegmentQueryInfoInternal* info);
+		[CLink] private static extern bool cpShapeSegmentQuery(void* shape, Vector2 a, Vector2 b, float radius, Space.cpSegmentQueryInfo* info);
 
 		/// Return contact information about two shapes.
-		[CLink] private static extern cpContactPointSet cpShapesCollide(void* a, void* b);
+		[CLink] private static extern ContactPointSet cpShapesCollide(void* a, void* b);
 
 		/// Calculate the moment of inertia for a circle.
 		/// @c r1 and @c r2 are the inner and outer diameters. A solid circle has an inner diameter of 0.
-		[CLink] private static extern float cpMomentForCircle(float m, float r1, float r2, cpVect offset);
+		[CLink] private static extern float cpMomentForCircle(float m, float r1, float r2, Vector2 offset);
 
 		/// Calculate area of a hollow circle.
 		/// @c r1 and @c r2 are the inner and outer diameters. A solid circle has an inner diameter of 0.
@@ -313,27 +313,27 @@ namespace Chipmunk2D
 
 		/// Calculate the moment of inertia for a line segment.
 		/// Beveling radius is not supported.
-		[CLink] private static extern float cpMomentForSegment(float m, cpVect a, cpVect b, float radius);
+		[CLink] private static extern float cpMomentForSegment(float m, Vector2 a, Vector2 b, float radius);
 
 		/// Calculate the area of a fattened (capsule shaped) line segment.
-		[CLink] private static extern float cpAreaForSegment(cpVect a, cpVect b, float radius);
+		[CLink] private static extern float cpAreaForSegment(Vector2 a, Vector2 b, float radius);
 
 		/// Calculate the moment of inertia for a solid polygon shape assuming it's center of gravity is at it's
 		// centroid. The offset is added to each vertex.
-		[CLink] private static extern float cpMomentForPoly(float m, int32 count, cpVect* verts, cpVect offset, float radius);
+		[CLink] private static extern float cpMomentForPoly(float m, int32 count, Vector2* verts, Vector2 offset, float radius);
 
 		/// Calculate the signed area of a polygon. A Clockwise winding gives positive area.
 		/// This is probably backwards from what you expect, but matches Chipmunk's the winding for poly shapes.
-		[CLink] private static extern float cpAreaForPoly(int32 count, cpVect* verts, float radius);
+		[CLink] private static extern float cpAreaForPoly(int32 count, Vector2* verts, float radius);
 
 		/// Calculate the natural centroid of a polygon.
-		[CLink] private static extern cpVect cpCentroidForPoly(int32 count, cpVect* verts);
+		[CLink] private static extern Vector2 cpCentroidForPoly(int32 count, Vector2* verts);
 
 		/// Calculate the moment of inertia for a solid box.
 		[CLink] private static extern float cpMomentForBox(float m, float width, float height);
 	}
 
-	class cpPolyShape : cpShape
+	class PolyShape : Shape
 	{
 		public int Count => (int)cpPolyShapeGetCount(handle);
 
@@ -343,7 +343,7 @@ namespace Chipmunk2D
 		{
 		}
 
-		public cpVect this[int index]
+		public Vector2 this[int index]
 		{
 			get
 			{
@@ -354,22 +354,22 @@ namespace Chipmunk2D
 		/// Get the number of verts in a polygon shape.
 		[CLink] private static extern int32 cpPolyShapeGetCount(void* shape);
 		/// Get the @c ith vertex of a polygon shape.
-		[CLink] private static extern cpVect cpPolyShapeGetVert(void* shape, int32 index);
+		[CLink] private static extern Vector2 cpPolyShapeGetVert(void* shape, int32 index);
 		/// Get the radius of a polygon shape.
 		[CLink] private static extern float cpPolyShapeGetRadius(void* shape);
 
 	}
 
-	class cpBoxShape : cpPolyShape
+	class BoxShape : PolyShape
 	{
 		public this(void* _handle) : base(_handle)
 		{
 		}
 
 	}
-	class cpCircleShape : cpShape
+	class CircleShape : Shape
 	{
-		public cpVect Offset => cpCircleShapeGetOffset(handle);
+		public Vector2 Offset => cpCircleShapeGetOffset(handle);
 
 		public float Radius => cpCircleShapeGetRadius(handle);
 
@@ -378,18 +378,18 @@ namespace Chipmunk2D
 		}
 
 		/// Get the offset of a circle shape.
-		[CLink] private static extern cpVect cpCircleShapeGetOffset(void* shape);
+		[CLink] private static extern Vector2 cpCircleShapeGetOffset(void* shape);
 		/// Get the radius of a circle shape.
 		[CLink] private static extern float cpCircleShapeGetRadius(void* shape);
 	}
 
-	class cpSegmentShape : cpShape
+	class SegmentShape : Shape
 	{
-		public cpVect EndPointA => cpSegmentShapeGetA(handle);
+		public Vector2 EndPointA => cpSegmentShapeGetA(handle);
 
-		public cpVect EndPointB => cpSegmentShapeGetB(handle);
+		public Vector2 EndPointB => cpSegmentShapeGetB(handle);
 
-		public cpVect Normal => cpSegmentShapeGetNormal(handle);
+		public Vector2 Normal => cpSegmentShapeGetNormal(handle);
 
 		public float Radius => cpSegmentShapeGetRadius(handle);
 
@@ -397,20 +397,20 @@ namespace Chipmunk2D
 		{
 		}
 
-		public void SetNeighbors(cpVect prev, cpVect next)
+		public void SetNeighbors(Vector2 prev, Vector2 next)
 		{
 			cpSegmentShapeSetNeighbors(handle, prev, next);
 		}
 
 		/// Let Chipmunk know about the geometry of adjacent segments to avoid colliding with endcaps.
-		[CLink] private static extern void cpSegmentShapeSetNeighbors(void* shape, cpVect prev, cpVect next);
+		[CLink] private static extern void cpSegmentShapeSetNeighbors(void* shape, Vector2 prev, Vector2 next);
 
 		/// Get the first endpoint of a segment shape.
-		[CLink] private static extern cpVect cpSegmentShapeGetA(void* shape);
+		[CLink] private static extern Vector2 cpSegmentShapeGetA(void* shape);
 		/// Get the second endpoint of a segment shape.
-		[CLink] private static extern cpVect cpSegmentShapeGetB(void* shape);
+		[CLink] private static extern Vector2 cpSegmentShapeGetB(void* shape);
 		/// Get the normal of a segment shape.
-		[CLink] private static extern cpVect cpSegmentShapeGetNormal(void* shape);
+		[CLink] private static extern Vector2 cpSegmentShapeGetNormal(void* shape);
 		/// Get the first endpoint of a segment shape.
 		[CLink] private static extern float cpSegmentShapeGetRadius(void* shape);
 	}

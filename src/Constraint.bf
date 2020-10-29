@@ -2,14 +2,14 @@ using System;
 
 namespace Chipmunk2D
 {
-	class cpConstraint : cpObject
+	class Constraint : ObjectBase
 	{
-		protected cpBody bodyA;
-		protected cpBody bodyB;
+		protected Body bodyA;
+		protected Body bodyB;
 
-		public cpBody BodyA => bodyA;
+		public Body BodyA => bodyA;
 
-		public cpBody BodyB => bodyB;
+		public Body BodyB => bodyB;
 
 		public float MaxForce { get { return cpConstraintGetMaxForce(handle); } set { cpConstraintSetMaxForce(handle, value); } }
 
@@ -21,7 +21,7 @@ namespace Chipmunk2D
 
 		public float Impulse => cpConstraintGetImpulse(handle);
 
-		protected void Initialize(void* _handle, cpBody a, cpBody b)
+		protected void Initialize(void* _handle, Body a, Body b)
 		{
 			handle = _handle;
 			bodyA = a;
@@ -68,9 +68,9 @@ namespace Chipmunk2D
 		[CLink] private static extern float cpConstraintGetImpulse(void* constraint);
 	}
 
-	class cpDampedRotarySpring : cpConstraint
+	class DampedRotarySpring : Constraint
 	{
-		public this(cpBody a, cpBody b, float restAngle, float stiffness, float damping)
+		public this(Body a, Body b, float restAngle, float stiffness, float damping)
 		{
 			Initialize(cpDampedRotarySpringNew(a.Handle, b.Handle, restAngle, stiffness, damping), a, b);
 		}
@@ -101,16 +101,16 @@ namespace Chipmunk2D
 
 	}
 
-	class cpDampedSpring : cpConstraint
+	class DampedSpring : Constraint
 	{
-		public this(cpBody a, cpBody b, cpVect anchorA, cpVect anchorB, float restLength, float stiffness, float damping)
+		public this(Body a, Body b, Vector2 anchorA, Vector2 anchorB, float restLength, float stiffness, float damping)
 		{
 			Initialize(cpDampedSpringNew(a.Handle, b.Handle, anchorA, anchorB, restLength, stiffness, damping), a, b);
 		}
 
-		public cpVect AnchorA { get { return cpDampedSpringGetAnchorA(handle); } set { cpDampedSpringSetAnchorA(handle, value); } }
+		public Vector2 AnchorA { get { return cpDampedSpringGetAnchorA(handle); } set { cpDampedSpringSetAnchorA(handle, value); } }
 
-		public cpVect AnchorB { get { return cpDampedSpringGetAnchorB(handle); } set { cpDampedSpringSetAnchorB(handle, value); } }
+		public Vector2 AnchorB { get { return cpDampedSpringGetAnchorB(handle); } set { cpDampedSpringSetAnchorB(handle, value); } }
 
 		public float RestLength { get { return cpDampedSpringGetRestLength(handle); } set { cpDampedSpringSetRestLength(handle, value); } }
 
@@ -119,17 +119,17 @@ namespace Chipmunk2D
 		public float Damping { get { return cpDampedSpringGetDamping(handle); } set { cpDampedSpringSetDamping(handle, value); } }
 
 		/// Allocate and initialize a damped spring.
-		[CLink] private static extern void* cpDampedSpringNew(void* a, void* b, cpVect anchorA, cpVect anchorB, float restLength, float stiffness, float damping);
+		[CLink] private static extern void* cpDampedSpringNew(void* a, void* b, Vector2 anchorA, Vector2 anchorB, float restLength, float stiffness, float damping);
 
 		/// Get the location of the first anchor relative to the first body.
-		[CLink] private static extern cpVect cpDampedSpringGetAnchorA(void* constraint);
+		[CLink] private static extern Vector2 cpDampedSpringGetAnchorA(void* constraint);
 		/// Set the location of the first anchor relative to the first body.
-		[CLink] private static extern void cpDampedSpringSetAnchorA(void* constraint, cpVect anchorA);
+		[CLink] private static extern void cpDampedSpringSetAnchorA(void* constraint, Vector2 anchorA);
 
 		/// Get the location of the second anchor relative to the second body.
-		[CLink] private static extern cpVect cpDampedSpringGetAnchorB(void* constraint);
+		[CLink] private static extern Vector2 cpDampedSpringGetAnchorB(void* constraint);
 		/// Set the location of the second anchor relative to the second body.
-		[CLink] private static extern void cpDampedSpringSetAnchorB(void* constraint, cpVect anchorB);
+		[CLink] private static extern void cpDampedSpringSetAnchorB(void* constraint, Vector2 anchorB);
 
 		/// Get the rest length of the spring.
 		[CLink] private static extern float cpDampedSpringGetRestLength(void* constraint);
@@ -148,9 +148,9 @@ namespace Chipmunk2D
 
 	}
 
-	class cpGearJoint : cpConstraint
+	class GearJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, float phase, float ratio)
+		public this(Body a, Body b, float phase, float ratio)
 		{
 			Initialize(cpGearJointNew(a.Handle, b.Handle, phase, ratio), a, b);
 		}
@@ -174,64 +174,64 @@ namespace Chipmunk2D
 
 	}
 
-	class cpGrooveJoint : cpConstraint
+	class GrooveJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, cpVect groove_a, cpVect groove_b, cpVect anchorB)
+		public this(Body a, Body b, Vector2 groove_a, Vector2 groove_b, Vector2 anchorB)
 		{
 			Initialize(cpGrooveJointNew(a.Handle, b.Handle, groove_a, groove_b, anchorB), a, b);
 		}
 
-		public cpVect GrooveA { get { return cpGrooveJointGetGrooveA(handle); } set { cpGrooveJointSetGrooveA(handle, value); } }
+		public Vector2 GrooveA { get { return cpGrooveJointGetGrooveA(handle); } set { cpGrooveJointSetGrooveA(handle, value); } }
 
-		public cpVect GrooveB { get { return cpGrooveJointGetGrooveB(handle); } set { cpGrooveJointSetGrooveB(handle, value); } }
+		public Vector2 GrooveB { get { return cpGrooveJointGetGrooveB(handle); } set { cpGrooveJointSetGrooveB(handle, value); } }
 
-		public cpVect AnchorB { get { return cpGrooveJointGetAnchorB(handle); } set { cpGrooveJointSetAnchorB(handle, value); } }
+		public Vector2 AnchorB { get { return cpGrooveJointGetAnchorB(handle); } set { cpGrooveJointSetAnchorB(handle, value); } }
 
 		/// Allocate and initialize a groove joint.
-		[CLink] private static extern void* cpGrooveJointNew(void* a, void* b, cpVect groove_a, cpVect groove_b, cpVect anchorB);
+		[CLink] private static extern void* cpGrooveJointNew(void* a, void* b, Vector2 groove_a, Vector2 groove_b, Vector2 anchorB);
 
 		/// Get the first endpoint of the groove relative to the first body.
-		[CLink] private static extern cpVect cpGrooveJointGetGrooveA(void* constraint);
+		[CLink] private static extern Vector2 cpGrooveJointGetGrooveA(void* constraint);
 		/// Set the first endpoint of the groove relative to the first body.
-		[CLink] private static extern void cpGrooveJointSetGrooveA(void* constraint, cpVect grooveA);
+		[CLink] private static extern void cpGrooveJointSetGrooveA(void* constraint, Vector2 grooveA);
 
 		/// Get the first endpoint of the groove relative to the first body.
-		[CLink] private static extern cpVect cpGrooveJointGetGrooveB(void* constraint);
+		[CLink] private static extern Vector2 cpGrooveJointGetGrooveB(void* constraint);
 		/// Set the first endpoint of the groove relative to the first body.
-		[CLink] private static extern void cpGrooveJointSetGrooveB(void* constraint, cpVect grooveB);
+		[CLink] private static extern void cpGrooveJointSetGrooveB(void* constraint, Vector2 grooveB);
 
 		/// Get the location of the second anchor relative to the second body.
-		[CLink] private static extern cpVect cpGrooveJointGetAnchorB(void* constraint);
+		[CLink] private static extern Vector2 cpGrooveJointGetAnchorB(void* constraint);
 		/// Set the location of the second anchor relative to the second body.
-		[CLink] private static extern void cpGrooveJointSetAnchorB(void* constraint, cpVect anchorB);
+		[CLink] private static extern void cpGrooveJointSetAnchorB(void* constraint, Vector2 anchorB);
 
 	}
 
-	class cpPinJoint : cpConstraint
+	class PinJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, cpVect anchorA, cpVect anchorB)
+		public this(Body a, Body b, Vector2 anchorA, Vector2 anchorB)
 		{
 			Initialize(cpPinJointNew(a.Handle, b.Handle, anchorA, anchorB), a, b);
 		}
 
-		public cpVect AnchorA { get { return cpPinJointGetAnchorA(handle); } set { cpPinJointSetAnchorA(handle, value); } }
+		public Vector2 AnchorA { get { return cpPinJointGetAnchorA(handle); } set { cpPinJointSetAnchorA(handle, value); } }
 
-		public cpVect AnchorB { get { return cpPinJointGetAnchorB(handle); } set { cpPinJointSetAnchorB(handle, value); } }
+		public Vector2 AnchorB { get { return cpPinJointGetAnchorB(handle); } set { cpPinJointSetAnchorB(handle, value); } }
 
 		public float Distance { get { return cpPinJointGetDist(handle); } set { cpPinJointSetDist(handle, value); } }
 
 		/// Allocate and initialize a pin joint.
-		[CLink] private static extern void* cpPinJointNew(void* a, void* b, cpVect anchorA, cpVect anchorB);
+		[CLink] private static extern void* cpPinJointNew(void* a, void* b, Vector2 anchorA, Vector2 anchorB);
 
 		/// Get the location of the first anchor relative to the first body.
-		[CLink] private static extern cpVect cpPinJointGetAnchorA(void* constraint);
+		[CLink] private static extern Vector2 cpPinJointGetAnchorA(void* constraint);
 		/// Set the location of the first anchor relative to the first body.
-		[CLink] private static extern void cpPinJointSetAnchorA(void* constraint, cpVect anchorA);
+		[CLink] private static extern void cpPinJointSetAnchorA(void* constraint, Vector2 anchorA);
 
 		/// Get the location of the second anchor relative to the second body.
-		[CLink] private static extern cpVect cpPinJointGetAnchorB(void* constraint);
+		[CLink] private static extern Vector2 cpPinJointGetAnchorB(void* constraint);
 		/// Set the location of the second anchor relative to the second body.
-		[CLink] private static extern void cpPinJointSetAnchorB(void* constraint, cpVect anchorB);
+		[CLink] private static extern void cpPinJointSetAnchorB(void* constraint, Vector2 anchorB);
 
 		/// Get the distance the joint will maintain between the two anchors.
 		[CLink] private static extern float cpPinJointGetDist(void* constraint);
@@ -240,41 +240,41 @@ namespace Chipmunk2D
 
 	}
 
-	class cpPivotJoint : cpConstraint
+	class PivotJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, cpVect pivot)
+		public this(Body a, Body b, Vector2 pivot)
 		{
 			Initialize(cpPivotJointNew(a.Handle, b.Handle, pivot), a, b);
 		}
 
-		public this(cpBody a, cpBody b, cpVect anchorA, cpVect anchorB)
+		public this(Body a, Body b, Vector2 anchorA, Vector2 anchorB)
 		{
 			Initialize(cpPivotJointNew2(a.Handle, b.Handle, anchorA, anchorB), a, b);
 		}
 
-		public cpVect AnchorA { get { return cpPivotJointGetAnchorA(handle); } set { cpPivotJointSetAnchorA(handle, value); } }
+		public Vector2 AnchorA { get { return cpPivotJointGetAnchorA(handle); } set { cpPivotJointSetAnchorA(handle, value); } }
 
-		public cpVect AnchorB { get { return cpPivotJointGetAnchorB(handle); } set { cpPivotJointSetAnchorB(handle, value); } }
+		public Vector2 AnchorB { get { return cpPivotJointGetAnchorB(handle); } set { cpPivotJointSetAnchorB(handle, value); } }
 
 		/// Allocate and initialize a pivot joint.
-		[CLink] private static extern void* cpPivotJointNew(void* a, void* b, cpVect pivot);
+		[CLink] private static extern void* cpPivotJointNew(void* a, void* b, Vector2 pivot);
 		/// Allocate and initialize a pivot joint with specific anchors.
-		[CLink] private static extern void* cpPivotJointNew2(void* a, void* b, cpVect anchorA, cpVect anchorB);
+		[CLink] private static extern void* cpPivotJointNew2(void* a, void* b, Vector2 anchorA, Vector2 anchorB);
 
 		/// Get the location of the first anchor relative to the first body.
-		[CLink] private static extern cpVect cpPivotJointGetAnchorA(void* constraint);
+		[CLink] private static extern Vector2 cpPivotJointGetAnchorA(void* constraint);
 		/// Set the location of the first anchor relative to the first body.
-		[CLink] private static extern void cpPivotJointSetAnchorA(void* constraint, cpVect anchorA);
+		[CLink] private static extern void cpPivotJointSetAnchorA(void* constraint, Vector2 anchorA);
 
 		/// Get the location of the second anchor relative to the second body.
-		[CLink] private static extern cpVect cpPivotJointGetAnchorB(void* constraint);
+		[CLink] private static extern Vector2 cpPivotJointGetAnchorB(void* constraint);
 		/// Set the location of the second anchor relative to the second body.
-		[CLink] private static extern void cpPivotJointSetAnchorB(void* constraint, cpVect anchorB);
+		[CLink] private static extern void cpPivotJointSetAnchorB(void* constraint, Vector2 anchorB);
 	}
 
-	class cpRatchetJoint : cpConstraint
+	class RatchetJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, float phase, float ratchet)
+		public this(Body a, Body b, float phase, float ratchet)
 		{
 			Initialize(cpRatchetJointNew(a.Handle, b.Handle, phase, ratchet), a, b);
 		}
@@ -304,9 +304,9 @@ namespace Chipmunk2D
 		[CLink] private static extern void cpRatchetJointSetRatchet(void* constraint, float ratchet);
 	}
 
-	class cpRotaryLimitJoint : cpConstraint
+	class RotaryLimitJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, float min, float max)
+		public this(Body a, Body b, float min, float max)
 		{
 			Initialize(cpRotaryLimitJointNew(a.Handle, b.Handle, min, max), a, b);
 		}
@@ -330,9 +330,9 @@ namespace Chipmunk2D
 
 	}
 
-	class cpSimpleMotor : cpConstraint
+	class SimpleMotor : Constraint
 	{
-		public this(cpBody a, cpBody b, float rate)
+		public this(Body a, Body b, float rate)
 		{
 			Initialize(cpSimpleMotorNew(a.Handle, b.Handle, rate), a, b);
 		}
@@ -349,25 +349,25 @@ namespace Chipmunk2D
 
 	}
 
-	class cpSlideJoint : cpConstraint
+	class SlideJoint : Constraint
 	{
-		public this(cpBody a, cpBody b, cpVect anchorA, cpVect anchorB, float min, float max)
+		public this(Body a, Body b, Vector2 anchorA, Vector2 anchorB, float min, float max)
 		{
 			Initialize(cpSlideJointNew(a.Handle, b.Handle, anchorA, anchorB, min, max), a, b);
 		}
 
 		/// Allocate and initialize a slide joint.
-		[CLink] private static extern void* cpSlideJointNew(void* a, void* b, cpVect anchorA, cpVect anchorB, float min, float max);
+		[CLink] private static extern void* cpSlideJointNew(void* a, void* b, Vector2 anchorA, Vector2 anchorB, float min, float max);
 
 		/// Get the location of the first anchor relative to the first body.
-		[CLink] private static extern cpVect cpSlideJointGetAnchorA(void* constraint);
+		[CLink] private static extern Vector2 cpSlideJointGetAnchorA(void* constraint);
 		/// Set the location of the first anchor relative to the first body.
-		[CLink] private static extern void cpSlideJointSetAnchorA(void* constraint, cpVect anchorA);
+		[CLink] private static extern void cpSlideJointSetAnchorA(void* constraint, Vector2 anchorA);
 
 		/// Get the location of the second anchor relative to the second body.
-		[CLink] private static extern cpVect cpSlideJointGetAnchorB(void* constraint);
+		[CLink] private static extern Vector2 cpSlideJointGetAnchorB(void* constraint);
 		/// Set the location of the second anchor relative to the second body.
-		[CLink] private static extern void cpSlideJointSetAnchorB(void* constraint, cpVect anchorB);
+		[CLink] private static extern void cpSlideJointSetAnchorB(void* constraint, Vector2 anchorB);
 
 		/// Get the minimum distance the joint will maintain between the two anchors.
 		[CLink] private static extern float cpSlideJointGetMin(void* constraint);

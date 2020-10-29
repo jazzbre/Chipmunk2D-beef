@@ -2,7 +2,7 @@ using System;
 
 namespace Chipmunk2D
 {
-	class cpObject
+	class ObjectBase
 	{
 		protected void* handle = null;
 
