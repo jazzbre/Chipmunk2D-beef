@@ -1,0 +1,6 @@
+[submodule "submodules/bx"]
+	path = submodules/bx
+	url = git://github.com/bkaradzic/bx.git
+[submodule "submodules/Chipmunk2D"]
+	path = submodules/Chipmunk2D
+	url = git@github.com:slembcke/Chipmunk2D.git

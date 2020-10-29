@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {Chipmunk2D-beef = {Path = "."}, Example = {Path = "example"}}
+
+[Workspace]
+StartupProject = "Example"

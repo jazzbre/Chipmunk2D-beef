@@ -1,0 +1,9 @@
+FileVersion = 1
+Dependencies = {corlib = "*", Chipmunk2D-beef = "*"}
+
+[Project]
+Name = "Example"
+StartupObject = "Example.Program"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)\\..\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]

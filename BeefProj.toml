@@ -1,0 +1,6 @@
+FileVersion = 1
+
+[Project]
+Name = "Chipmunk2D-beef"
+TargetType = "BeefLib"
+StartupObject = "Chipmunk2D_beef.Program"
