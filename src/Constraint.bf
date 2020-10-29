@@ -356,6 +356,14 @@ namespace Chipmunk2D
 			Initialize(cpSlideJointNew(a.Handle, b.Handle, anchorA, anchorB, min, max), a, b);
 		}
 
+		public Vector2 AnchorA { get { return cpSlideJointGetAnchorA(handle); } set { cpSlideJointSetAnchorA(handle, value); } }
+
+		public Vector2 AnchorB { get { return cpSlideJointGetAnchorB(handle); } set { cpSlideJointSetAnchorB(handle, value); } }
+
+		public float MinimumDistance { get { return cpSlideJointGetMin(handle); } set { cpSlideJointSetMin(handle, value); } }
+
+		public float MaximumDistance { get { return cpSlideJointGetMax(handle); } set { cpSlideJointSetMax(handle, value); } }
+
 		/// Allocate and initialize a slide joint.
 		[CLink] private static extern void* cpSlideJointNew(void* a, void* b, Vector2 anchorA, Vector2 anchorB, float min, float max);
 
