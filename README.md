@@ -16,10 +16,3 @@ Example is the Tank example but running in console mode.
 
 ## Future work
 iOS, Android, macOS and Linux build scripts.
-
-## Art
-
-Clouds:
-http://pixelartmaker.com/art/a2cfe63f4ca5f16
-Rain drop:
-http://pixelartmaker.com/art/b3e0f940338bc21
