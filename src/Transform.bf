@@ -5,9 +5,9 @@ namespace Chipmunk2D
 	[CRepr]
 	struct Transform
 	{
-		public float a , b , c , d , tx , ty;
+		public Real a , b , c , d , tx , ty;
 
-		public this(float _a = 1.0f, float _b = 0.0f, float _c = 0.0f, float _d = 1.0f, float _tx = 0.0f, float _ty = 0.0f)
+		public this(Real _a = 1.0f, Real _b = 0.0f, Real _c = 0.0f, Real _d = 1.0f, Real _tx = 0.0f, Real _ty = 0.0f)
 		{
 			a = _a;
 			b = _b;
@@ -29,7 +29,7 @@ namespace Chipmunk2D
 
 		public Transform Inverse()
 		{
-			float inv_det = 1.0f / (a * d - c * b);
+			Real inv_det = 1.0f / (a * d - c * b);
 			return Transform(
 				d * inv_det, -c * inv_det, (c * ty - tx * d) * inv_det,
 				-b * inv_det, a * inv_det, (tx * b - a * ty) * inv_det).Transpose();

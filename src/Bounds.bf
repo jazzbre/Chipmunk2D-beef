@@ -5,19 +5,19 @@ namespace Chipmunk2D
 	[CRepr]
 	struct Bounds
 	{
-		float l , b , r , t;
+		Real l , b , r , t;
 
 		public Vector2 Center => Vector2.Lerp(Vector2(l, b), Vector2(r, t), 0.5f);
 
 		/// Returns the area of the bounding box.
-		public float Area => (r - l) * (t - b);
+		public Real Area => (r - l) * (t - b);
 
 		/// Merges @c a and @c b and returns the area of the merged bounding box.
 		public this
 		{
 		}
 
-		public this(float _l, float _b, float _r, float _t)
+		public this(Real _l, Real _b, Real _r, Real _t)
 		{
 			l = _l;
 			b = _b;
@@ -25,7 +25,7 @@ namespace Chipmunk2D
 			t = _t;
 		}
 
-		public this(Vector2 c, float hw, float hh)
+		public this(Vector2 c, Real hw, Real hh)
 		{
 			l = c.x - hw;
 			b = c.y - hh;
@@ -34,7 +34,7 @@ namespace Chipmunk2D
 		}
 
 
-		public this(Vector2 c, float radius)
+		public this(Vector2 c, Real radius)
 		{
 			l = c.x - radius;
 			b = c.y - radius;
@@ -47,7 +47,7 @@ namespace Chipmunk2D
 			strBuffer.AppendF("({0}, {1}, {2}, {3})", l, b, r, t);
 		}
 
-		public static float MergedArea(Bounds a, Bounds b)
+		public static Real MergedArea(Bounds a, Bounds b)
 		{
 			return (Math.Max(a.r, b.r) - Math.Min(a.l, b.l)) * (Math.Max(a.t, b.t) - Math.Min(a.b, b.b));
 		}

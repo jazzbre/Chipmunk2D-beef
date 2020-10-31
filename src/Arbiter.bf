@@ -21,7 +21,7 @@ namespace Chipmunk2D
 		/// Penetration distance of the two shapes. Overlapping means it will be negative.
 		/// This value is calculated as cpvdot(cpvsub(point2, point1), normal) and is ignored by
 		// cpArbiterSetContactPointSet().
-		public float distance;
+		public Real distance;
 	}
 
 	/// A struct that wraps up the important collision data for an arbiter.
@@ -47,7 +47,7 @@ namespace Chipmunk2D
 			handle = _handle;
 		}
 
-		public float Restituion
+		public Real Restituion
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Friction
+		public Real Friction
 		{
 			get
 			{
@@ -92,7 +92,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float TotalKE
+		public Real TotalKE
 		{
 			get
 			{
@@ -169,16 +169,16 @@ namespace Chipmunk2D
 
 		/// Get the restitution (elasticity) that will be applied to the pair of colliding objects.
 		[CLink]
-		private static extern float cpArbiterGetRestitution(void* arb);
+		private static extern Real cpArbiterGetRestitution(void* arb);
 		/// Override the restitution (elasticity) that will be applied to the pair of colliding objects.
 		[CLink]
-		private static extern void cpArbiterSetRestitution(void* arb, float restitution);
+		private static extern void cpArbiterSetRestitution(void* arb, Real restitution);
 		/// Get the friction coefficient that will be applied to the pair of colliding objects.
 		[CLink]
-		private static extern float cpArbiterGetFriction(void* arb);
+		private static extern Real cpArbiterGetFriction(void* arb);
 		/// Override the friction coefficient that will be applied to the pair of colliding objects.
 		[CLink]
-		private static extern void cpArbiterSetFriction(void* arb, float friction);
+		private static extern void cpArbiterSetFriction(void* arb, Real friction);
 
 		// Get the relative surface velocity of the two shapes in contact.
 		[CLink]
@@ -206,7 +206,7 @@ namespace Chipmunk2D
 		/// Calculate the amount of energy lost in a collision including static, but not dynamic friction.
 		/// This function should only be called from a post-solve, post-step or cpBodyEachArbiter callback.
 		[CLink]
-		private static extern float cpArbiterTotalKE(void* arb);
+		private static extern Real cpArbiterTotalKE(void* arb);
 
 		/// Mark a collision pair to be ignored until the two objects separate.
 		/// Pre-solve and post-solve callbacks will not be called, but the separate callback will be called.
@@ -255,7 +255,7 @@ namespace Chipmunk2D
 		private static extern Vector2 cpArbiterGetPointB(void* arb, int32 i);
 		[CLink]
 		/// Get the depth of the @c ith contact point.
-		private static extern float cpArbiterGetDepth(void* arb, int32 i);
+		private static extern Real cpArbiterGetDepth(void* arb, int32 i);
 
 		/// If you want a custom callback to invoke the wildcard callback for the first collision type, you must call
 		// this function explicitly. You must decide how to handle the wildcard's return value since it may disagree

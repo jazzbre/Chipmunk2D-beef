@@ -38,7 +38,7 @@ namespace Chipmunk2D
 
 		public bool IsSleeping => cpBodyIsSleeping(handle);
 
-		public float Mass
+		public Real Mass
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Moment
+		public Real Moment
 		{
 			get
 			{
@@ -110,7 +110,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Angle
+		public Real Angle
 		{
 			get
 			{
@@ -122,7 +122,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float AngularVelocity
+		public Real AngularVelocity
 		{
 			get
 			{
@@ -134,7 +134,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Torque
+		public Real Torque
 		{
 			get
 			{
@@ -148,9 +148,9 @@ namespace Chipmunk2D
 
 		public Vector2 Rotation => cpBodyGetRotation(handle);
 
-		public float KineticEnergy => cpBodyKineticEnergy(handle);
+		public Real KineticEnergy => cpBodyKineticEnergy(handle);
 
-		public this(BodyType type, float mass = 0.0f, float moment = 0.0f)
+		public this(BodyType type, Real mass = 0.0f, Real moment = 0.0f)
 		{
 			switch (type) {
 			case .Static:
@@ -196,7 +196,7 @@ namespace Chipmunk2D
 			cpBodySleep(handle);
 		}
 
-		public Shape AddBoxShape(float width, float height, float radius)
+		public Shape AddBoxShape(Real width, Real height, Real radius)
 		{
 			var shape = new BoxShape(cpBoxShapeNew(handle, width, height, radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
@@ -204,7 +204,7 @@ namespace Chipmunk2D
 			return shape;
 		}
 
-		public Shape AddPolyShape(Vector2[] verts, float radius)
+		public Shape AddPolyShape(Vector2[] verts, Real radius)
 		{
 			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
@@ -212,7 +212,7 @@ namespace Chipmunk2D
 			return shape;
 		}
 
-		public Shape AddCircleShape(float radius, Vector2 offset = Vector2.Zero)
+		public Shape AddCircleShape(Real radius, Vector2 offset = Vector2.Zero)
 		{
 			var shape = new CircleShape(cpCircleShapeNew(handle, radius, offset));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
@@ -220,7 +220,7 @@ namespace Chipmunk2D
 			return shape;
 		}
 
-		public Shape AddSegmentShape(Vector2 a, Vector2 b, float radius)
+		public Shape AddSegmentShape(Vector2 a, Vector2 b, Real radius)
 		{
 			var shape = new SegmentShape(cpSegmentShapeNew(handle, a, b, radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
@@ -323,7 +323,7 @@ namespace Chipmunk2D
 		}
 
 		[CLink]
-		private static extern void* cpBodyNew(float mass, float moment);
+		private static extern void* cpBodyNew(Real mass, Real moment);
 
 		/// Allocate and initialize a Body, and set it as a kinematic body.
 		[CLink]
@@ -360,17 +360,17 @@ namespace Chipmunk2D
 
 		/// Get the mass of the body.
 		[CLink]
-		private static extern float cpBodyGetMass(void* body);
+		private static extern Real cpBodyGetMass(void* body);
 		/// Set the mass of the body.
 		[CLink]
-		private static extern void cpBodySetMass(void* body, float m);
+		private static extern void cpBodySetMass(void* body, Real m);
 
 		/// Get the moment of inertia of the body.
 		[CLink]
-		private static extern float cpBodyGetMoment(void* body);
+		private static extern Real cpBodyGetMoment(void* body);
 		/// Set the moment of inertia of the body.
 		[CLink]
-		private static extern void cpBodySetMoment(void* body, float i);
+		private static extern void cpBodySetMoment(void* body, Real i);
 
 		/// Set the position of a body.
 		[CLink]
@@ -402,24 +402,24 @@ namespace Chipmunk2D
 
 		/// Get the angle of the body.
 		[CLink]
-		private static extern float cpBodyGetAngle(void* body);
+		private static extern Real cpBodyGetAngle(void* body);
 		/// Set the angle of a body.
 		[CLink]
-		private static extern void cpBodySetAngle(void* body, float a);
+		private static extern void cpBodySetAngle(void* body, Real a);
 
 		/// Get the angular velocity of the body.
 		[CLink]
-		private static extern float cpBodyGetAngularVelocity(void* body);
+		private static extern Real cpBodyGetAngularVelocity(void* body);
 		/// Set the angular velocity of the body.
 		[CLink]
-		private static extern void cpBodySetAngularVelocity(void* body, float angularVelocity);
+		private static extern void cpBodySetAngularVelocity(void* body, Real angularVelocity);
 
 		/// Get the torque applied to the body for the next time step.
 		[CLink]
-		private static extern float cpBodyGetTorque(void* body);
+		private static extern Real cpBodyGetTorque(void* body);
 		/// Set the torque applied to the body for the next time step.
 		[CLink]
-		private static extern void cpBodySetTorque(void* body, float torque);
+		private static extern void cpBodySetTorque(void* body, Real torque);
 
 		/// Get the rotation vector of the body. (The x basis vector of it's transform.)
 		[CLink]
@@ -434,10 +434,10 @@ namespace Chipmunk2D
 
 		/// Default velocity integration function..
 		[CLink]
-		private static extern void cpBodyUpdateVelocity(void* body, Vector2 gravity, float damping, float dt);
+		private static extern void cpBodyUpdateVelocity(void* body, Vector2 gravity, Real damping, Real dt);
 		/// Default position integration function.
 		[CLink]
-		private static extern void cpBodyUpdatePosition(void* body, float dt);
+		private static extern void cpBodyUpdatePosition(void* body, Real dt);
 
 		/// Convert body relative/local coordinates to absolute/world coordinates.
 		[CLink]
@@ -469,7 +469,7 @@ namespace Chipmunk2D
 
 		/// Get the amount of kinetic energy contained by the body.
 		[CLink]
-		private static extern float cpBodyKineticEnergy(void* body);
+		private static extern Real cpBodyKineticEnergy(void* body);
 
 
 		/// Call @c func once for each shape attached to @c body and added to the space.
@@ -496,20 +496,20 @@ namespace Chipmunk2D
 		/// Allocate and initialize a polygon shape with rounded corners.
 		/// The vertexes must be convex with a counter-clockwise winding.
 		[CLink]
-		private static extern void* cpPolyShapeNewRaw(void* body, int32 count, Vector2* verts, float radius);
+		private static extern void* cpPolyShapeNewRaw(void* body, int32 count, Vector2* verts, Real radius);
 
 		/// Allocate and initialize a box shaped polygon shape.
 		[CLink]
-		private static extern void* cpBoxShapeNew(void* body, float width, float height, float radius);
+		private static extern void* cpBoxShapeNew(void* body, Real width, Real height, Real radius);
 
 
 		/// Allocate and initialize a circle shape.
 		[CLink]
-		private static extern void* cpCircleShapeNew(void* body, float radius, Vector2 offset);
+		private static extern void* cpCircleShapeNew(void* body, Real radius, Vector2 offset);
 
 		/// Allocate and initialize a segment shape.
 		[CLink]
-		private static extern void* cpSegmentShapeNew(void* body, Vector2 a, Vector2 b, float radius);
+		private static extern void* cpSegmentShapeNew(void* body, Vector2 a, Vector2 b, Real radius);
 
 	}
 }

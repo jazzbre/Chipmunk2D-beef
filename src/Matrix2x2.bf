@@ -6,9 +6,9 @@ namespace Chipmunk2D
 	struct Matrix2x2
 	{
 		// Row major [[a, b][c d]]
-		float a , b , c , d;
+		Real a , b , c , d;
 
-		public this(float _a = 1.0f, float _b = 0.0f, float _c = 0.0f, float _d = 1.0f)
+		public this(Real _a = 1.0f, Real _b = 0.0f, Real _c = 0.0f, Real _d = 1.0f)
 		{
 			a = _a;
 			b = _b;

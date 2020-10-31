@@ -3,7 +3,7 @@ project "chipmunk2d"
    windowstargetplatformversion("10.0")
 
    defines {
-      "CP_USE_DOUBLES=0"
+      "CP_USE_DOUBLES=1"
    }
 
 	includedirs {

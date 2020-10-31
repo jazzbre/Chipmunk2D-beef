@@ -5,7 +5,7 @@ namespace Chipmunk2D
 	[CRepr]
 	struct Vector2
 	{
-		public float x , y;
+		public Real x , y;
 
 		public static Vector2 Zero = Vector2(0f, 0f);
 		public static Vector2 One = Vector2(1f, 1f);
@@ -16,15 +16,15 @@ namespace Chipmunk2D
 		public static Vector2 Right = Vector2(1f, 0f);
 		public static Vector2 Left = Vector2(-1f, 0f);
 
-		public float Length
+		public Real Length
 		{
 			get
 			{
-				return (float)Math.Sqrt(x * x + y * y);
+				return (Real)Math.Sqrt(x * x + y * y);
 			}
 		}
 
-		public float LengthSquared
+		public Real LengthSquared
 		{
 			get
 			{
@@ -32,7 +32,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Angle
+		public Real Angle
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public this(float _x = 0.0f, float _y = 0.0f)
+		public this(Real _x = 0.0f, Real _y = 0.0f)
 		{
 			x = _x;
 			y = _y;
@@ -51,17 +51,17 @@ namespace Chipmunk2D
 			strBuffer.AppendF("({0}, {1})", x, y);
 		}
 
-		public static void DistanceSquared(Vector2 value1, Vector2 value2, out float result)
+		public static void DistanceSquared(Vector2 value1, Vector2 value2, out Real result)
 		{
 			result = (value1.x - value2.x) * (value1.x - value2.x) +
 				(value1.y - value2.y) * (value1.y - value2.y);
 		}
 
-		public static float Distance(Vector2 vector1, Vector2 Vector2)
+		public static Real Distance(Vector2 vector1, Vector2 Vector2)
 		{
-			float result;
+			Real result;
 			DistanceSquared(vector1, Vector2, out result);
-			return (float)Math.Sqrt(result);
+			return (Real)Math.Sqrt(result);
 		}
 
 		public static Vector2 Add(Vector2 vec1, Vector2 vec2)
@@ -74,17 +74,17 @@ namespace Chipmunk2D
 			return Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
 		}
 
-		public static float Dot(Vector2 vec1, Vector2 vec2)
+		public static Real Dot(Vector2 vec1, Vector2 vec2)
 		{
 			return vec1.x * vec2.x + vec1.y * vec2.y;
 		}
 
-		public static Vector2 FromAngle(float angle, float length = 1.0f)
+		public static Vector2 FromAngle(Real angle, Real length = 1.0f)
 		{
-			return Vector2((float)Math.Cos(angle) * length, (float)Math.Sin(angle) * length);
+			return Vector2((Real)Math.Cos(angle) * length, (Real)Math.Sin(angle) * length);
 		}
 
-		public static Vector2 Lerp(Vector2 vec1, Vector2 vec2, float b)
+		public static Vector2 Lerp(Vector2 vec1, Vector2 vec2, Real b)
 		{
 			return vec1 + (vec2 - vec1) * b;
 		}
@@ -111,12 +111,12 @@ namespace Chipmunk2D
 			return Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
 		}
 
-		public static Vector2 operator*(Vector2 vec1, float factor)
+		public static Vector2 operator*(Vector2 vec1, Real factor)
 		{
 			return Vector2(vec1.x * factor, vec1.y * factor);
 		}
 
-		public static Vector2 operator/(Vector2 vec1, float factor)
+		public static Vector2 operator/(Vector2 vec1, Real factor)
 		{
 			return Vector2(vec1.x / factor, vec1.y / factor);
 		}

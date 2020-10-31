@@ -61,7 +61,7 @@ namespace Example
 			) ~ delete _;
 
 
-		static Body AddBox(Space space, float size, float mass, int index)
+		static Body AddBox(Space space, Real size, Real mass, int index)
 		{
 			var radius = Vector2(size, size).Length;
 			var body = new Body(.Dynamic, mass, Shape.MomentForBox(mass, size, size));

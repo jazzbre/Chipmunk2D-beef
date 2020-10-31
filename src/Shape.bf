@@ -21,7 +21,7 @@ namespace Chipmunk2D
 
 	abstract class Shape : ObjectBase
 	{
-		public float Mass
+		public Real Mass
 		{
 			get
 			{
@@ -33,7 +33,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Density
+		public Real Density
 		{
 			get
 			{
@@ -45,9 +45,9 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Moment => cpShapeGetMoment(handle);
+		public Real Moment => cpShapeGetMoment(handle);
 
-		public float Area => cpShapeGetArea(handle);
+		public Real Area => cpShapeGetArea(handle);
 
 		public Bounds Bounds => cpShapeGetBB(handle);
 
@@ -63,7 +63,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Elasticity
+		public Real Elasticity
 		{
 			get
 			{
@@ -75,7 +75,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Friction
+		public Real Friction
 		{
 			get
 			{
@@ -145,7 +145,7 @@ namespace Chipmunk2D
 			return cpShapeUpdate(handle, transform);
 		}
 
-		float PointQuery(Vector2 p, out PointQueryInfo info)
+		Real PointQuery(Vector2 p, out PointQueryInfo info)
 		{
 			var internalInfo = Space.cpPointQueryInfo();
 			var value = cpShapePointQuery(handle, p, &internalInfo);
@@ -156,7 +156,7 @@ namespace Chipmunk2D
 			return value;
 		}
 
-		bool SegmentQuery(Vector2 a, Vector2 b, float radius, out SegmentQueryInfo info)
+		bool SegmentQuery(Vector2 a, Vector2 b, Real radius, out SegmentQueryInfo info)
 		{
 			var internalInfo = Space.cpSegmentQueryInfo();
 			var value = cpShapeSegmentQuery(handle, a, b, radius, &internalInfo);
@@ -167,32 +167,32 @@ namespace Chipmunk2D
 			return value;
 		}
 
-		public static float MomentForCircle(float m, float r1, float r2, Vector2 offset)
+		public static Real MomentForCircle(Real m, Real r1, Real r2, Vector2 offset)
 		{
 			return cpMomentForCircle(m, r1, r2, offset);
 		}
 
-		public static float AreaForCircle(float r1, float r2)
+		public static Real AreaForCircle(Real r1, Real r2)
 		{
 			return cpAreaForCircle(r1, r2);
 		}
 
-		public static float MomentForSegment(float m, Vector2 a, Vector2 b, float radius)
+		public static Real MomentForSegment(Real m, Vector2 a, Vector2 b, Real radius)
 		{
 			return MomentForSegment(m, a, b, radius);
 		}
 
-		public static float AreaForSegment(Vector2 a, Vector2 b, float radius)
+		public static Real AreaForSegment(Vector2 a, Vector2 b, Real radius)
 		{
 			return cpAreaForSegment(a, b, radius);
 		}
 
-		public static float MomentForPoly(float m, Vector2[] verts, Vector2 offset, float radius)
+		public static Real MomentForPoly(Real m, Vector2[] verts, Vector2 offset, Real radius)
 		{
 			return cpMomentForPoly(m, (int32)verts.Count, &verts[0], offset, radius);
 		}
 
-		public static float AreaForPoly(Vector2[] verts, float radius)
+		public static Real AreaForPoly(Vector2[] verts, Real radius)
 		{
 			return cpAreaForPoly((int32)verts.Count, &verts[0], radius);
 		}
@@ -202,7 +202,7 @@ namespace Chipmunk2D
 			return cpCentroidForPoly((int32)verts.Count, &verts[0]);
 		}
 
-		public static float MomentForBox(float m, float width, float height)
+		public static Real MomentForBox(Real m, Real width, Real height)
 		{
 			return cpMomentForBox(m, width, height);
 		}
@@ -212,24 +212,24 @@ namespace Chipmunk2D
 
 		/// Get the mass of the shape if you are having Chipmunk calculate mass properties for you.
 		[CLink]
-		private static extern float cpShapeGetMass(void* shape);
+		private static extern Real cpShapeGetMass(void* shape);
 		/// Set the mass of this shape to have Chipmunk calculate mass properties for you.
 		[CLink]
-		private static extern void cpShapeSetMass(void* shape, float mass);
+		private static extern void cpShapeSetMass(void* shape, Real mass);
 
 		/// Get the density of the shape if you are having Chipmunk calculate mass properties for you.
 		[CLink]
-		private static extern float cpShapeGetDensity(void* shape);
+		private static extern Real cpShapeGetDensity(void* shape);
 		/// Set the density  of this shape to have Chipmunk calculate mass properties for you.
 		[CLink]
-		private static extern void cpShapeSetDensity(void* shape, float density);
+		private static extern void cpShapeSetDensity(void* shape, Real density);
 
 		/// Get the calculated moment of inertia for this shape.
 		[CLink]
-		private static extern float cpShapeGetMoment(void* shape);
+		private static extern Real cpShapeGetMoment(void* shape);
 		/// Get the calculated area of this shape.
 		[CLink]
-		private static extern float cpShapeGetArea(void* shape);
+		private static extern Real cpShapeGetArea(void* shape);
 		/// Get the centroid of this shape.
 		[CLink]
 		private static extern Vector2 cpShapeGetCenterOfGravity(void* shape);
@@ -247,17 +247,17 @@ namespace Chipmunk2D
 
 		/// Get the elasticity of this shape.
 		[CLink]
-		private static extern float cpShapeGetElasticity(void* shape);
+		private static extern Real cpShapeGetElasticity(void* shape);
 		/// Set the elasticity of this shape.
 		[CLink]
-		private static extern void cpShapeSetElasticity(void* shape, float elasticity);
+		private static extern void cpShapeSetElasticity(void* shape, Real elasticity);
 
 		/// Get the friction of this shape.
 		[CLink]
-		private static extern float cpShapeGetFriction(void* shape);
+		private static extern Real cpShapeGetFriction(void* shape);
 		/// Set the friction of this shape.
 		[CLink]
-		private static extern void cpShapeSetFriction(void* shape, float friction);
+		private static extern void cpShapeSetFriction(void* shape, Real friction);
 
 		/// Get the surface velocity of this shape.
 		[CLink]
@@ -294,50 +294,50 @@ namespace Chipmunk2D
 		/// Perform a nearest point query. It finds the closest point on the surface of shape to a specific point.
 		/// The value returned is the distance between the points. A negative distance means the point is inside the
 		// shape.
-		[CLink] private static extern float cpShapePointQuery(void* shape, Vector2 p, Space.cpPointQueryInfo* outValue);
+		[CLink] private static extern Real cpShapePointQuery(void* shape, Vector2 p, Space.cpPointQueryInfo* outValue);
 
 		/// Perform a segment query against a shape. @c info must be a pointer to a valid cpSegmentQueryInfo structure.
-		[CLink] private static extern bool cpShapeSegmentQuery(void* shape, Vector2 a, Vector2 b, float radius, Space.cpSegmentQueryInfo* info);
+		[CLink] private static extern bool cpShapeSegmentQuery(void* shape, Vector2 a, Vector2 b, Real radius, Space.cpSegmentQueryInfo* info);
 
 		/// Return contact information about two shapes.
 		[CLink] private static extern ContactPointSet cpShapesCollide(void* a, void* b);
 
 		/// Calculate the moment of inertia for a circle.
 		/// @c r1 and @c r2 are the inner and outer diameters. A solid circle has an inner diameter of 0.
-		[CLink] private static extern float cpMomentForCircle(float m, float r1, float r2, Vector2 offset);
+		[CLink] private static extern Real cpMomentForCircle(Real m, Real r1, Real r2, Vector2 offset);
 
 		/// Calculate area of a hollow circle.
 		/// @c r1 and @c r2 are the inner and outer diameters. A solid circle has an inner diameter of 0.
-		[CLink] private static extern float cpAreaForCircle(float r1, float r2);
+		[CLink] private static extern Real cpAreaForCircle(Real r1, Real r2);
 
 
 		/// Calculate the moment of inertia for a line segment.
 		/// Beveling radius is not supported.
-		[CLink] private static extern float cpMomentForSegment(float m, Vector2 a, Vector2 b, float radius);
+		[CLink] private static extern Real cpMomentForSegment(Real m, Vector2 a, Vector2 b, Real radius);
 
 		/// Calculate the area of a fattened (capsule shaped) line segment.
-		[CLink] private static extern float cpAreaForSegment(Vector2 a, Vector2 b, float radius);
+		[CLink] private static extern Real cpAreaForSegment(Vector2 a, Vector2 b, Real radius);
 
 		/// Calculate the moment of inertia for a solid polygon shape assuming it's center of gravity is at it's
 		// centroid. The offset is added to each vertex.
-		[CLink] private static extern float cpMomentForPoly(float m, int32 count, Vector2* verts, Vector2 offset, float radius);
+		[CLink] private static extern Real cpMomentForPoly(Real m, int32 count, Vector2* verts, Vector2 offset, Real radius);
 
 		/// Calculate the signed area of a polygon. A Clockwise winding gives positive area.
 		/// This is probably backwards from what you expect, but matches Chipmunk's the winding for poly shapes.
-		[CLink] private static extern float cpAreaForPoly(int32 count, Vector2* verts, float radius);
+		[CLink] private static extern Real cpAreaForPoly(int32 count, Vector2* verts, Real radius);
 
 		/// Calculate the natural centroid of a polygon.
 		[CLink] private static extern Vector2 cpCentroidForPoly(int32 count, Vector2* verts);
 
 		/// Calculate the moment of inertia for a solid box.
-		[CLink] private static extern float cpMomentForBox(float m, float width, float height);
+		[CLink] private static extern Real cpMomentForBox(Real m, Real width, Real height);
 	}
 
 	class PolyShape : Shape
 	{
 		public int Count => (int)cpPolyShapeGetCount(handle);
 
-		public float Radius => cpPolyShapeGetRadius(handle);
+		public Real Radius => cpPolyShapeGetRadius(handle);
 
 		public this(void* _handle) : base(_handle)
 		{
@@ -356,7 +356,7 @@ namespace Chipmunk2D
 		/// Get the @c ith vertex of a polygon shape.
 		[CLink] private static extern Vector2 cpPolyShapeGetVert(void* shape, int32 index);
 		/// Get the radius of a polygon shape.
-		[CLink] private static extern float cpPolyShapeGetRadius(void* shape);
+		[CLink] private static extern Real cpPolyShapeGetRadius(void* shape);
 
 	}
 
@@ -371,7 +371,7 @@ namespace Chipmunk2D
 	{
 		public Vector2 Offset => cpCircleShapeGetOffset(handle);
 
-		public float Radius => cpCircleShapeGetRadius(handle);
+		public Real Radius => cpCircleShapeGetRadius(handle);
 
 		public this(void* _handle) : base(_handle)
 		{
@@ -380,7 +380,7 @@ namespace Chipmunk2D
 		/// Get the offset of a circle shape.
 		[CLink] private static extern Vector2 cpCircleShapeGetOffset(void* shape);
 		/// Get the radius of a circle shape.
-		[CLink] private static extern float cpCircleShapeGetRadius(void* shape);
+		[CLink] private static extern Real cpCircleShapeGetRadius(void* shape);
 	}
 
 	class SegmentShape : Shape
@@ -391,7 +391,7 @@ namespace Chipmunk2D
 
 		public Vector2 Normal => cpSegmentShapeGetNormal(handle);
 
-		public float Radius => cpSegmentShapeGetRadius(handle);
+		public Real Radius => cpSegmentShapeGetRadius(handle);
 
 		public this(void* _handle) : base(_handle)
 		{
@@ -412,6 +412,6 @@ namespace Chipmunk2D
 		/// Get the normal of a segment shape.
 		[CLink] private static extern Vector2 cpSegmentShapeGetNormal(void* shape);
 		/// Get the first endpoint of a segment shape.
-		[CLink] private static extern float cpSegmentShapeGetRadius(void* shape);
+		[CLink] private static extern Real cpSegmentShapeGetRadius(void* shape);
 	}
 }

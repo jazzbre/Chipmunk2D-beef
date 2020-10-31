@@ -21,7 +21,7 @@ namespace Chipmunk2D
 		/// The closest point on the shape's surface. (in world space coordinates)
 		public Vector2 point;
 		/// The distance to the point. The distance is negative if the point is inside the shape.
-		public float distance;
+		public Real distance;
 		/// The gradient of the signed distance function.
 		/// The value should be similar to info.p/info.d, but accurate even for very small values of info.d.
 		public Vector2 gradient;
@@ -37,7 +37,7 @@ namespace Chipmunk2D
 		/// The normal of the surface hit.
 		public Vector2 normal;
 		/// The normalized distance along the query segment in the range [0, 1].
-		public float alpha;
+		public Real alpha;
 	}
 
 	struct ShapeQueryInfo
@@ -75,7 +75,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float Damping
+		public Real Damping
 		{
 			get
 			{
@@ -87,7 +87,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float SleepTimeThreshold
+		public Real SleepTimeThreshold
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float CollisionSlop
+		public Real CollisionSlop
 		{
 			get
 			{
@@ -111,7 +111,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float CollisionBias
+		public Real CollisionBias
 		{
 			get
 			{
@@ -136,7 +136,7 @@ namespace Chipmunk2D
 			}
 		}
 
-		public float CurrentTimeStep => cpSpaceGetCurrentTimeStep(handle);
+		public Real CurrentTimeStep => cpSpaceGetCurrentTimeStep(handle);
 
 		public bool IsLocked => cpSpaceIsLocked(handle);
 
@@ -174,7 +174,7 @@ namespace Chipmunk2D
 			cpSpaceRemoveConstraint(handle, constraint.Handle);
 		}
 
-		public void Step(float dt)
+		public void Step(Real dt)
 		{
 			cpSpaceStep(handle, dt);
 		}
@@ -284,41 +284,41 @@ namespace Chipmunk2D
 		/// The default value is 1.0, meaning no damping is applied.
 		/// @note This damping value is different than those of cpDampedSpring and cpDampedRotarySpring.
 		[CLink]
-		private static extern float cpSpaceGetDamping(void* space);
+		private static extern Real cpSpaceGetDamping(void* space);
 		[CLink]
-		private static extern void cpSpaceSetDamping(void* space, float damping);
+		private static extern void cpSpaceSetDamping(void* space, Real damping);
 
 		/// Speed threshold for a body to be considered idle.
 		/// The default value of 0 means to let the space guess a good threshold based on gravity.
 		[CLink]
-		private static extern float cpSpaceGetIdleSpeedThreshold(void* space);
+		private static extern Real cpSpaceGetIdleSpeedThreshold(void* space);
 		[CLink]
-		private static extern void cpSpaceSetIdleSpeedThreshold(void* space, float idleSpeedThreshold);
+		private static extern void cpSpaceSetIdleSpeedThreshold(void* space, Real idleSpeedThreshold);
 
 		/// Time a group of bodies must remain idle in order to fall asleep.
 		/// Enabling sleeping also implicitly enables the the contact graph.
 		/// The default value of INFINITY disables the sleeping algorithm.
 		[CLink]
-		private static extern float cpSpaceGetSleepTimeThreshold(void* space);
+		private static extern Real cpSpaceGetSleepTimeThreshold(void* space);
 		[CLink]
-		private static extern void cpSpaceSetSleepTimeThreshold(void* space, float sleepTimeThreshold);
+		private static extern void cpSpaceSetSleepTimeThreshold(void* space, Real sleepTimeThreshold);
 
 		/// Amount of encouraged penetration between colliding shapes.
 		/// Used to reduce oscillating contacts and keep the collision cache warm.
 		/// Defaults to 0.1. If you have poor simulation quality,
 		/// increase this number as much as possible without allowing visible amounts of overlap.
 		[CLink]
-		private static extern float cpSpaceGetCollisionSlop(void* space);
+		private static extern Real cpSpaceGetCollisionSlop(void* space);
 		[CLink]
-		private static extern void cpSpaceSetCollisionSlop(void* space, float collisionSlop);
+		private static extern void cpSpaceSetCollisionSlop(void* space, Real collisionSlop);
 
 		/// Determines how fast overlapping shapes are pushed apart.
 		/// Expressed as a fraction of the error remaining after each second.
 		/// Defaults to pow(1.0 - 0.1, 60.0) meaning that Chipmunk fixes 10% of overlap each frame at 60Hz.
 		[CLink]
-		private static extern float cpSpaceGetCollisionBias(void* space);
+		private static extern Real cpSpaceGetCollisionBias(void* space);
 		[CLink]
-		private static extern void cpSpaceSetCollisionBias(void* space, float collisionBias);
+		private static extern void cpSpaceSetCollisionBias(void* space, Real collisionBias);
 
 		/// Number of frames that contact information should persist.
 		/// Defaults to 3. There is probably never a reason to change this value.
@@ -343,7 +343,7 @@ namespace Chipmunk2D
 		/// Returns the current (or most recent) time step used with the given space.
 		/// Useful from callbacks if your time step is not a compile-time global.
 		[CLink]
-		private static extern float cpSpaceGetCurrentTimeStep(void* space);
+		private static extern Real cpSpaceGetCurrentTimeStep(void* space);
 
 		/// Struct that holds function callback pointers to configure custom collision handling.
 		/// Collision handlers have a pair of types; when a collision occurs between two shapes that have these types,
@@ -399,7 +399,7 @@ namespace Chipmunk2D
 		[CLink] private static extern void cpSpaceRemoveConstraint(void* space, void* constraint);
 
 		/// Step the space forward in time by @c dt.
-		[CLink] private static extern void cpSpaceStep(void* space, float dt);
+		[CLink] private static extern void cpSpaceStep(void* space, Real dt);
 
 		/// Schedule a post-step callback to be called when cpSpaceStep() finishes.
 		/// You can only register one callback per unique value for @c key.
@@ -416,7 +416,7 @@ namespace Chipmunk2D
 		{
 			public void* shapeHandle;
 			public Vector2 point;
-			public float distance;
+			public Real distance;
 			public Vector2 gradient;
 		}
 
@@ -426,21 +426,21 @@ namespace Chipmunk2D
 			public void* shapeHandle;
 			public Vector2 point;
 			public Vector2 normal;
-			public float alpha;
+			public Real alpha;
 		}
 
-		private static void OnPointQuery(void* shape, Vector2 point, float distance, Vector2 gradient, void* data)
+		private static void OnPointQuery(void* shape, Vector2 point, Real distance, Vector2 gradient, void* data)
 		{
 			var infos = Internal.UnsafeCastToObject(data) as List<PointQueryInfo>;
 			infos.Add(PointQueryInfo() { shape = Internal.UnsafeCastToObject(cpShapeGetUserData(shape)) as Shape, point = point, distance = distance, gradient = gradient });
 		}
 
-		public void PointQuery(Vector2 point, float maxDistance, ShapeFilter filter, ref List<PointQueryInfo> infos)
+		public void PointQuery(Vector2 point, Real maxDistance, ShapeFilter filter, ref List<PointQueryInfo> infos)
 		{
 			cpSpacePointQuery(handle, point, maxDistance, filter, => OnPointQuery, Internal.UnsafeCastToPtr(infos));
 		}
 
-		public bool PointQueryNearest(Vector2 point, float maxDistance, ShapeFilter filter, out PointQueryInfo outValue)
+		public bool PointQueryNearest(Vector2 point, Real maxDistance, ShapeFilter filter, out PointQueryInfo outValue)
 		{
 			outValue = PointQueryInfo();
 			var infoInternal = cpPointQueryInfo();
@@ -457,18 +457,18 @@ namespace Chipmunk2D
 			return true;
 		}
 
-		private static void OnSegmentQuery(void* shape, Vector2 point, Vector2 normal, float alpha, void* data)
+		private static void OnSegmentQuery(void* shape, Vector2 point, Vector2 normal, Real alpha, void* data)
 		{
 			var infos = Internal.UnsafeCastToObject(data) as List<SegmentQueryInfo>;
 			infos.Add(SegmentQueryInfo() { shape = Internal.UnsafeCastToObject(cpShapeGetUserData(shape)) as Shape, point = point, normal = normal, alpha = alpha });
 		}
 
-		public void SegmentQuery(Vector2 start, Vector2 end, float radius, ShapeFilter filter, ref List<SegmentQueryInfo> infos)
+		public void SegmentQuery(Vector2 start, Vector2 end, Real radius, ShapeFilter filter, ref List<SegmentQueryInfo> infos)
 		{
 			cpSpaceSegmentQuery(handle, start, end, radius, filter, => OnSegmentQuery, Internal.UnsafeCastToPtr(infos));
 		}
 
-		public bool SegmentQueryFirst(Vector2 start, Vector2 end, float radius, ShapeFilter filter, out SegmentQueryInfo outValue)
+		public bool SegmentQueryFirst(Vector2 start, Vector2 end, Real radius, ShapeFilter filter, out SegmentQueryInfo outValue)
 		{
 			outValue = SegmentQueryInfo();
 			var infoInternal = cpSegmentQueryInfo();
@@ -512,17 +512,17 @@ namespace Chipmunk2D
 
 		/// Nearest point query callback function type.
 		/// Query the space at a point and call @c func for each shape found.
-		[CLink] private static extern void cpSpacePointQuery(void* space, Vector2 point, float maxDistance, ShapeFilter filter, function void(void* shape, Vector2 point, float distance, Vector2 gradient, void* data) func, void* data);
+		[CLink] private static extern void cpSpacePointQuery(void* space, Vector2 point, Real maxDistance, ShapeFilter filter, function void(void* shape, Vector2 point, Real distance, Vector2 gradient, void* data) func, void* data);
 		/// Query the space at a point and return the nearest shape found. Returns NULL if no shapes were found.
-		[CLink] private static extern void* cpSpacePointQueryNearest(void* space, Vector2 point, float maxDistance, ShapeFilter filter, cpPointQueryInfo* outValue);
+		[CLink] private static extern void* cpSpacePointQueryNearest(void* space, Vector2 point, Real maxDistance, ShapeFilter filter, cpPointQueryInfo* outValue);
 
 		/// Segment query callback function type.
 		/// Perform a directed line segment query (like a raycast) against the space calling @c func for each shape
 		// intersected.
-		[CLink] private static extern void cpSpaceSegmentQuery(void* space, Vector2 start, Vector2 end, float radius, ShapeFilter filter, function void(void* shape, Vector2 point, Vector2 normal, float alpha, void* data) func, void* data);
+		[CLink] private static extern void cpSpaceSegmentQuery(void* space, Vector2 start, Vector2 end, Real radius, ShapeFilter filter, function void(void* shape, Vector2 point, Vector2 normal, Real alpha, void* data) func, void* data);
 		/// Perform a directed line segment query (like a raycast) against the space and return the first shape hit.
 		// Returns NULL if no shapes were hit.
-		[CLink] private static extern void* cpSpaceSegmentQueryFirst(void* space, Vector2 start, Vector2 end, float radius, ShapeFilter filter, cpSegmentQueryInfo* outValue);
+		[CLink] private static extern void* cpSpaceSegmentQueryFirst(void* space, Vector2 start, Vector2 end, Real radius, ShapeFilter filter, cpSegmentQueryInfo* outValue);
 
 		/// Rectangle Query callback function type.
 		/// Perform a fast rectangle query on the space calling @c func for each shape found.
