@@ -20,7 +20,7 @@ IF %ERRORLEVEL% EQU 0 (
    echo Build failed!
 )
 ) else (
-echo Visual Studio 2019 not found! Open 'submodules\bgfx\.build\projects\vs2019\bgfx.sln' yourself and build it with your own version (NOTE you'll need to change vs2019 above to your installed version)
+echo Visual Studio 2019 not found! Open 'submodules\Chipmunk2D\.build\projects\vs2019\chipmunk2d.sln' yourself and build it with your own version (NOTE you'll need to change vs2019 above to your installed version)
 )
 
 pause
