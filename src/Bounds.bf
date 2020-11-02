@@ -13,10 +13,6 @@ namespace Chipmunk2D
 		public Real Area => (r - l) * (t - b);
 
 		/// Merges @c a and @c b and returns the area of the merged bounding box.
-		public this
-		{
-		}
-
 		public this(Real _l, Real _b, Real _r, Real _t)
 		{
 			l = _l;
