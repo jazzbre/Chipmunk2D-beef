@@ -11,7 +11,15 @@ set "VISUALSTUDIO19PATH=c:\Program Files (x86)\Microsoft Visual Studio\2019\Comm
 )
 
 IF EXIST "%VISUALSTUDIO19PATH%" (
-echo Building BGFX in Visual Studio 2019
+echo Building Chipmunk2D Debug in Visual Studio 2019
+"%VISUALSTUDIO19PATH%\devenv" ".build\projects\vs2019\chipmunk2d.sln" /Build "Debug|x64"
+echo ErrorLevel:%ERRORLEVEL%
+IF %ERRORLEVEL% EQU 0 (
+   echo Build successful!
+) else (
+   echo Build failed!
+)
+echo Building Chipmunk2D Release in Visual Studio 2019
 "%VISUALSTUDIO19PATH%\devenv" ".build\projects\vs2019\chipmunk2d.sln" /Build "Release|x64"
 echo ErrorLevel:%ERRORLEVEL%
 IF %ERRORLEVEL% EQU 0 (

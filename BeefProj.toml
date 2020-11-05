@@ -6,7 +6,7 @@ TargetType = "BeefLib"
 StartupObject = "Chipmunk2D_beef.Program"
 
 [Configs.Debug.Win64]
-LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]
+LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dDebug.lib"]
 
 [Configs.Release.Win64]
 LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]
