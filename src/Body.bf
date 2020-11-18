@@ -21,8 +21,16 @@ namespace Chipmunk2D
 
 	class Body : ObjectBase
 	{
+		/// Rigid body velocity update function type.
+		typealias VelocityDelegate = delegate void(Vector2 gravity, Real damping, Real dt);
+		/// Rigid body position update function type.
+		typealias PositionDelegate = delegate void(Real dt);
+
 		private List<Shape> shapes = new List<Shape>() ~ delete _;
 		private bool canFree;
+
+		private VelocityDelegate velocityDelegate;
+		private PositionDelegate positionDelegate;
 
 		public BodyType BodyType
 		{
@@ -150,6 +158,44 @@ namespace Chipmunk2D
 
 		public Real KineticEnergy => cpBodyKineticEnergy(handle);
 
+		public VelocityDelegate VelocityCallback
+		{
+			get
+			{
+				return velocityDelegate;
+			}
+			set
+			{
+				if (value != null)
+				{
+					cpBodySetVelocityFunc(handle, => BodyVelocityFunc);
+				} else
+				{
+					cpBodySetVelocityFunc(handle, null);
+				}
+				velocityDelegate = value;
+			}
+		}
+
+		public PositionDelegate PositionCallback
+		{
+			get
+			{
+				return positionDelegate;
+			}
+			set
+			{
+				if (value != null)
+				{
+					cpBodySetPositionFunc(handle, => BodyPositionFunc);
+				} else
+				{
+					cpBodySetPositionFunc(handle, null);
+				}
+				positionDelegate = value;
+			}
+		}
+
 		public this(BodyType type, Real mass = 0.0f, Real moment = 0.0f)
 		{
 			switch (type) {
@@ -174,13 +220,13 @@ namespace Chipmunk2D
 
 		public ~this()
 		{
-			if (canFree)
-			{
-				cpBodyFree(handle);
-			}
 			for (var shape in shapes)
 			{
 				delete shape;
+			}
+			if (canFree)
+			{
+				cpBodyFree(handle);
 			}
 			shapes.Clear();
 			handle = null;
@@ -199,6 +245,14 @@ namespace Chipmunk2D
 		public Shape AddBoxShape(Real width, Real height, Real radius)
 		{
 			var shape = new BoxShape(cpBoxShapeNew(handle, width, height, radius));
+			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
+			shapes.Add(shape);
+			return shape;
+		}
+
+		public Shape AddBoxShape(Bounds bounds, Real radius)
+		{
+			var shape = new BoxShape(cpBoxShapeNew2(handle, bounds, radius));
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
@@ -231,7 +285,6 @@ namespace Chipmunk2D
 		public void RemoveShape(Shape shape)
 		{
 			shapes.Remove(shape);
-			cpSpaceRemoveShape(cpBodyGetSpace(handle), shape.Handle);
 		}
 
 		public Vector2 TransformLocalToWorld(Vector2 point)
@@ -296,10 +349,10 @@ namespace Chipmunk2D
 			list.Add(constraint);
 		}
 
-		public void EachConstraint(delegate void(Constraint shape) func)
+		public void EachConstraint(delegate void(Constraint constraint) func)
 		{
 			var constraints = scope List<void*>();
-			cpBodyEachShape(handle, => OnEachConstraint, Internal.UnsafeCastToPtr(shapes));
+			cpBodyEachConstraint(handle, => OnEachConstraint, Internal.UnsafeCastToPtr(constraints));
 			for (var constraint in constraints)
 			{
 				func(Internal.UnsafeCastToObject(constraint) as Constraint);
@@ -312,15 +365,43 @@ namespace Chipmunk2D
 			list.Add(arbiter);
 		}
 
-		public void EachArbiter(delegate void(Arbiter shape) func)
+		public void EachArbiter(delegate void(Arbiter arbiter) func)
 		{
 			var arbiters = scope List<void*>();
-			cpBodyEachShape(handle, => OnEachArbiter, Internal.UnsafeCastToPtr(shapes));
+			cpBodyEachArbiter(handle, => OnEachArbiter, Internal.UnsafeCastToPtr(arbiters));
 			for (var arbiter in arbiters)
 			{
 				func(Arbiter(arbiter));
 			}
 		}
+
+
+		private static void BodyVelocityFunc(void* _body, Vector2 gravity, Real damping, Real dt)
+		{
+			var body = (Body)Internal.UnsafeCastToObject(cpBodyGetUserData(_body));
+			body.velocityDelegate(gravity, damping, dt);
+		}
+
+		private static void BodyPositionFunc(void* _body, Real dt)
+		{
+			var body = (Body)Internal.UnsafeCastToObject(cpBodyGetUserData(_body));
+			body.positionDelegate(dt);
+		}
+
+		public void UpdateVelocity(Vector2 gravity, Real damping, Real dt)
+		{
+			cpBodyUpdateVelocity(handle, gravity, damping, dt);
+		}
+
+		public void UpdatePosition(Real dt)
+		{
+			cpBodyUpdatePosition(handle, dt);
+		}
+
+		/// Rigid body velocity update function type.
+		typealias cpBodyVelocityFuncInternal = function void(void* body, Vector2 gravity, Real damping, Real dt);
+		/// Rigid body position update function type.
+		typealias cpBodyPositionFuncInternal = function void(void* body, Real dt);
 
 		[CLink]
 		private static extern void* cpBodyNew(Real mass, Real moment);
@@ -490,9 +571,6 @@ namespace Chipmunk2D
 		/// If the shape is attached to a static body, it will be added as a static shape.
 		[CLink] private static extern void* cpSpaceAddShape(void* space, void* shape);
 
-		/// Remove a collision shape from the simulation.
-		[CLink] private static extern void cpSpaceRemoveShape(void* space, void* shape);
-
 		/// Allocate and initialize a polygon shape with rounded corners.
 		/// The vertexes must be convex with a counter-clockwise winding.
 		[CLink]
@@ -502,6 +580,10 @@ namespace Chipmunk2D
 		[CLink]
 		private static extern void* cpBoxShapeNew(void* body, Real width, Real height, Real radius);
 
+		/// Allocate and initialize an offset box shaped polygon shape.
+		[CLink]
+		private static extern void* cpBoxShapeNew2(void* body, Bounds bounds, Real radius);
+
 
 		/// Allocate and initialize a circle shape.
 		[CLink]
@@ -510,6 +592,13 @@ namespace Chipmunk2D
 		/// Allocate and initialize a segment shape.
 		[CLink]
 		private static extern void* cpSegmentShapeNew(void* body, Vector2 a, Vector2 b, Real radius);
+
+		[CLink]
+		private static extern void cpBodySetVelocityFunc(void* body, cpBodyVelocityFuncInternal func);
+
+		[CLink]
+		private static extern void cpBodySetPositionFunc(void* body, cpBodyPositionFuncInternal func);
+
 
 	}
 }

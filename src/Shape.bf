@@ -131,6 +131,7 @@ namespace Chipmunk2D
 
 		public ~this()
 		{
+			cpSpaceRemoveShape(cpShapeGetSpace(handle), handle);
 			cpShapeFree(handle);
 			handle = null;
 		}
@@ -206,6 +207,9 @@ namespace Chipmunk2D
 		{
 			return cpMomentForBox(m, width, height);
 		}
+
+		/// Remove a collision shape from the simulation.
+		[CLink] private static extern void cpSpaceRemoveShape(void* space, void* shape);
 
 		[CLink]
 		private static extern void cpShapeFree(void* shape);
@@ -301,6 +305,9 @@ namespace Chipmunk2D
 
 		/// Return contact information about two shapes.
 		[CLink] private static extern ContactPointSet cpShapesCollide(void* a, void* b);
+
+		/// The cpSpace this body is added to.
+		[CLink] private static extern void* cpShapeGetSpace(void* shape);
 
 		/// Calculate the moment of inertia for a circle.
 		/// @c r1 and @c r2 are the inner and outer diameters. A solid circle has an inner diameter of 0.

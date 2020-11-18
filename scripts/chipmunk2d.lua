@@ -40,7 +40,8 @@ project "chipmunk2d"
       path.join(SOURCE_DIR, "Chipmunk2D/src/cpSpaceQuery.c"),
       path.join(SOURCE_DIR, "Chipmunk2D/src/cpSpaceStep.c"),
       path.join(SOURCE_DIR, "Chipmunk2D/src/cpSpatialIndex.c"),
-      path.join(SOURCE_DIR, "Chipmunk2D/src/cpSweep1D.c")
+      path.join(SOURCE_DIR, "Chipmunk2D/src/cpSweep1D.c"),
+      path.join(SOURCE_DIR, "Chipmunk2D-beef/*.cc")
 	}
 
 	configuration {}

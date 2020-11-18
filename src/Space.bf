@@ -473,6 +473,10 @@ namespace Chipmunk2D
 			outValue = SegmentQueryInfo();
 			var infoInternal = cpSegmentQueryInfo();
 			var shapeHandle = cpSpaceSegmentQueryFirst(handle, start, end, radius, filter, &infoInternal);
+			if (shapeHandle == null)
+			{
+				return false;
+			}
 			var shape = Internal.UnsafeCastToObject(cpShapeGetUserData(shapeHandle)) as Shape;
 			if (shape == null)
 			{
