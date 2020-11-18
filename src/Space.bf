@@ -514,6 +514,11 @@ namespace Chipmunk2D
 			return cpSpaceShapeQuery(handle, shape.Handle, => OnShapeQuery, Internal.UnsafeCastToPtr(infos));
 		}
 
+		public void DebugDraw(ref DebugDrawOptions options)
+		{
+			cpSpaceDebugDraw(handle, &options);
+		}
+
 		/// Nearest point query callback function type.
 		/// Query the space at a point and call @c func for each shape found.
 		[CLink] private static extern void cpSpacePointQuery(void* space, Vector2 point, Real maxDistance, ShapeFilter filter, function void(void* shape, Vector2 point, Real distance, Vector2 gradient, void* data) func, void* data);
@@ -536,5 +541,8 @@ namespace Chipmunk2D
 		/// Shape query callback function type.
 		/// Query a space for any shapes overlapping the given shape and call @c func for each shape found.
 		[CLink] private static extern bool cpSpaceShapeQuery(void* space, void* shape, function void(void* shape, ContactPointSet* points, void* data) func, void* data);
+
+		/// Debug draw the current state of the space using the supplied drawing options.
+		[CLink] private static extern void cpSpaceDebugDraw(void* space, DebugDrawOptions* options);
 	}
 }
