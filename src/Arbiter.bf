@@ -4,12 +4,12 @@ namespace Chipmunk2D
 {
 	struct ArbiterBodyInfo
 	{
-		public Body bodyA , bodyB;
+		public Body bodyA, bodyB;
 	}
 
 	struct ArbiterShapeInfo
 	{
-		public Shape shapeA , shapeB;
+		public Shape shapeA, shapeB;
 	}
 
 	[CRepr]
@@ -115,7 +115,7 @@ namespace Chipmunk2D
 				void* a = ?;
 				void* b = ?;
 				cpArbiterGetBodies(handle, &a, &b);
-				var bodyInfo = ArbiterBodyInfo() { bodyA = Internal.UnsafeCastToObject(a) as Body, bodyB = Internal.UnsafeCastToObject(b) as Body };
+				var bodyInfo = ArbiterBodyInfo() { bodyA = Internal.UnsafeCastToObject(cpBodyGetUserData(a)) as Body, bodyB = Internal.UnsafeCastToObject(cpBodyGetUserData(b)) as Body };
 				return bodyInfo;
 			}
 		}
@@ -128,7 +128,7 @@ namespace Chipmunk2D
 				void* a = ?;
 				void* b = ?;
 				cpArbiterGetShapes(handle, &a, &b);
-				var shapeInfo = ArbiterShapeInfo() { shapeA = Internal.UnsafeCastToObject(a) as Shape, shapeB = Internal.UnsafeCastToObject(b) as Shape };
+				var shapeInfo = ArbiterShapeInfo() { shapeA = Internal.UnsafeCastToObject(cpShapeGetUserData(a)) as Shape, shapeB = Internal.UnsafeCastToObject(cpShapeGetUserData(b)) as Shape };
 				return shapeInfo;
 			}
 		}
@@ -296,5 +296,12 @@ namespace Chipmunk2D
 		// this function explicitly.
 		[CLink]
 		private static extern void cpArbiterCallWildcardSeparateB(void* arb, void* space);
+
+		[CLink]
+		private static extern void* cpShapeGetUserData(void* shape);
+
+		[CLink]
+		private static extern void* cpBodyGetUserData(void* body);
+
 	}
 }

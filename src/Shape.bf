@@ -21,6 +21,8 @@ namespace Chipmunk2D
 
 	abstract class Shape : ObjectBase
 	{
+		public Object UserObject { get; set; }
+
 		public Real Mass
 		{
 			get

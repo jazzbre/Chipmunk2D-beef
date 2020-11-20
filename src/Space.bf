@@ -5,12 +5,14 @@ namespace Chipmunk2D
 {
 	class CollisionHandler
 	{
+		typealias Callback = delegate void(Arbiter arb);
+
 		public uint typeA;
 		public uint typeB;
-		public delegate void(Arbiter arb) beginFunc;
-		public delegate void(Arbiter arb) preSolveFunc;
-		public delegate void(Arbiter arb) postSolveFunc;
-		public delegate void(Arbiter arb) separateFunc;
+		public Callback beginFunc;
+		public Callback preSolveFunc;
+		public Callback postSolveFunc;
+		public Callback separateFunc;
 	}
 
 	/// Point query info struct.
