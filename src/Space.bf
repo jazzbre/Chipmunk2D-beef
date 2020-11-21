@@ -521,6 +521,11 @@ namespace Chipmunk2D
 			cpSpaceDebugDraw(handle, &options);
 		}
 
+		public static int ConvexHullInplace(int count, Vector2* verts, Real tolerance)
+		{
+			return cpConvexHull((int32)count, verts, verts, null, tolerance);
+		}
+
 		/// Nearest point query callback function type.
 		/// Query the space at a point and call @c func for each shape found.
 		[CLink] private static extern void cpSpacePointQuery(void* space, Vector2 point, Real maxDistance, ShapeFilter filter, function void(void* shape, Vector2 point, Real distance, Vector2 gradient, void* data) func, void* data);
@@ -546,5 +551,12 @@ namespace Chipmunk2D
 
 		/// Debug draw the current state of the space using the supplied drawing options.
 		[CLink] private static extern void cpSpaceDebugDraw(void* space, DebugDrawOptions* options);
+
+		/// Calculate the convex hull of a given set of points. Returns the count of points in the hull.
+		/// @c result must be a pointer to a @c cpVect array with at least @c count elements. If @c verts == @c result,
+		// then @c verts will be reduced inplace. @c first is an optional pointer to an integer to store where the first
+		// vertex in the hull came from (i.e. verts[first] == result[0]) @c tol is the allowed amount to shrink the hull
+		// when simplifying it. A tolerance of 0.0 creates an exact hull.
+		[CLink] private static extern int32 cpConvexHull(int32 count, Vector2* verts, Vector2* result, int32* first, Real tol);
 	}
 }
