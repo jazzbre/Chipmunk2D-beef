@@ -200,6 +200,11 @@ namespace Chipmunk2D
 			return cpAreaForPoly((int32)verts.Count, &verts[0], radius);
 		}
 
+		public static Real AreaForPoly(Vector2* verts, int count, Real radius)
+		{
+			return cpAreaForPoly((int32)count, verts, radius);
+		}
+
 		public static Vector2 CentroidForPoly(Vector2[] verts)
 		{
 			return cpCentroidForPoly((int32)verts.Count, &verts[0]);

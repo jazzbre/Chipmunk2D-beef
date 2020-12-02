@@ -5,12 +5,13 @@ namespace Chipmunk2D
 {
 	class CollisionHandler
 	{
+		typealias CallbackBool = delegate bool(Arbiter arb);
 		typealias Callback = delegate void(Arbiter arb);
 
 		public uint typeA;
 		public uint typeB;
-		public Callback beginFunc;
-		public Callback preSolveFunc;
+		public CallbackBool beginFunc;
+		public CallbackBool preSolveFunc;
 		public Callback postSolveFunc;
 		public Callback separateFunc;
 	}
@@ -181,22 +182,24 @@ namespace Chipmunk2D
 			cpSpaceStep(handle, dt);
 		}
 
-		private static void OnBeginFuncCallback(void* arb, void* space, void* userData)
+		private static bool OnBeginFuncCallback(void* arb, void* space, void* userData)
 		{
 			var collisionHandler = Internal.UnsafeCastToObject(userData) as CollisionHandler;
 			if (collisionHandler.beginFunc != null)
 			{
-				collisionHandler.beginFunc(Arbiter(arb));
+				return collisionHandler.beginFunc(Arbiter(arb));
 			}
+			return true;
 		}
 
-		private static void OnPreSolveFuncCallback(void* arb, void* space, void* userData)
+		private static bool OnPreSolveFuncCallback(void* arb, void* space, void* userData)
 		{
 			var collisionHandler = Internal.UnsafeCastToObject(userData) as CollisionHandler;
 			if (collisionHandler.preSolveFunc != null)
 			{
-				collisionHandler.preSolveFunc(Arbiter(arb));
+				return collisionHandler.preSolveFunc(Arbiter(arb));
 			}
+			return true;
 		}
 
 		private static void OnPostSolveFuncCallback(void* arb, void* space, void* userData)
@@ -217,11 +220,14 @@ namespace Chipmunk2D
 			}
 		}
 
-		private void SetCollisionHandlerInternal(CollisionHandler collisionHandler, cpCollisionHandler* collisionHandlerInternal)
+		private void SetCollisionHandlerInternal(CollisionHandler collisionHandler, cpCollisionHandler* collisionHandlerInternal, bool wildcard = false)
 		{
 			collisionHandlerInternal.userData = Internal.UnsafeCastToPtr(collisionHandler);
-			collisionHandlerInternal.typeA = collisionHandler.typeA;
-			collisionHandlerInternal.typeB = collisionHandler.typeB;
+			if (!wildcard)
+			{
+				collisionHandlerInternal.typeA = collisionHandler.typeA;
+				collisionHandlerInternal.typeB = collisionHandler.typeB;
+			}
 			collisionHandlerInternal.beginFunc = => OnBeginFuncCallback;
 			collisionHandlerInternal.preSolveFunc = => OnPreSolveFuncCallback;
 			collisionHandlerInternal.postSolveFunc = => OnPostSolveFuncCallback;
@@ -240,7 +246,9 @@ namespace Chipmunk2D
 
 		public void AddWildcardHandler(CollisionHandler collisionHandler, uint collisionType)
 		{
-			SetCollisionHandlerInternal(collisionHandler, cpSpaceAddWildcardHandler(handle, collisionType));
+			collisionHandler.typeA = collisionType;
+			collisionHandler.typeB = uint32.MaxValue;
+			SetCollisionHandlerInternal(collisionHandler, cpSpaceAddWildcardHandler(handle, collisionType), true);
 		}
 
 		private static void OnPostStepCallback(void* _space, uint key, void* data)
@@ -360,10 +368,10 @@ namespace Chipmunk2D
 			/// In the collision handler callback, the shape with this type will be the second argument. Read only.
 			public uint typeB;
 			/// This function is called when two shapes with types that match this collision handler begin colliding.
-			public function void(void* arb, void* space, void* userData) beginFunc;
+			public function bool(void* arb, void* space, void* userData) beginFunc;
 			/// This function is called each step when two shapes with types that match this collision handler are
 			// colliding. It's called before the collision solver runs so that you can affect a collision's outcome.
-			public function void(void* arb, void* space, void* userData) preSolveFunc;
+			public function bool(void* arb, void* space, void* userData) preSolveFunc;
 			/// This function is called each step when two shapes with types that match this collision handler are
 			// colliding. It's called after the collision solver runs so that you can read back information about the
 			// collision to trigger events in your game.

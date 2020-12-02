@@ -100,14 +100,6 @@ namespace Chipmunk2D
 			}
 		}
 
-		public bool Ignore
-		{
-			get
-			{
-				return cpArbiterIgnore(handle);
-			}
-		}
-
 		public ArbiterBodyInfo Bodies
 		{
 			get
@@ -165,6 +157,11 @@ namespace Chipmunk2D
 				var valueCopy = value;
 				cpArbiterSetContactPointSet(handle, &valueCopy);
 			}
+		}
+
+		public bool Ignore()
+		{
+			return cpArbiterIgnore(handle);
 		}
 
 		/// Get the restitution (elasticity) that will be applied to the pair of colliding objects.
