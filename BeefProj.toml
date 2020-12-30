@@ -27,3 +27,15 @@ LibPaths = ["$(ProjectDir)\\.build\\osx64_clang\\bin\\libchipmunk2dRelease.a"]
 
 [Configs.Test.macOS]
 LibPaths = ["$(ProjectDir)\\.build\\osx64_clang\\bin\\libchipmunk2dRelease.a"]
+
+[Configs.Debug.Linux64]
+LibPaths = ["$(ProjectDir)\\.build\\linux64_gcc\\bin\\libchipmunk2dDebug.a"]
+
+[Configs.Release.Linux64]
+LibPaths = ["$(ProjectDir)\\.build\\linux64_gcc\\bin\\libchipmunk2dRelease.a"]
+
+[Configs.Paranoid.Linux64]
+LibPaths = ["$(ProjectDir)\\.build\\linux64_gcc\\bin\\libchipmunk2dRelease.a"]
+
+[Configs.Test.Linux64]
+LibPaths = ["$(ProjectDir)\\.build\\linux64_gcc\\bin\\libchipmunk2dRelease.a"]
