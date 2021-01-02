@@ -17,10 +17,10 @@
 
 
 ## Usage
-
 Open workspace and set Example as Startup project and Run!
-
 Example is the Tank example but running in console mode.
+MacOS/Linux can be built and run with provided VSCode project (expects Beef git clone in the same root folder as this project).
+
 
 ## Future work
 iOS and Android build scripts.
