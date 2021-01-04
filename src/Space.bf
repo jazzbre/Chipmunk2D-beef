@@ -160,6 +160,10 @@ namespace Chipmunk2D
 		public void AddBody(Body body)
 		{
 			cpSpaceAddBody(handle, body.Handle);
+			for (var shape in body.Shapes)
+			{
+				cpSpaceAddShape(handle, shape.Handle);
+			}
 		}
 
 		public void AddConstraint(Constraint constraint)
@@ -169,6 +173,10 @@ namespace Chipmunk2D
 
 		public void RemoveBody(Body body)
 		{
+			for (var shape in body.Shapes)
+			{
+				cpSpaceRemoveShape(handle, shape.Handle);
+			}
 			cpSpaceRemoveBody(handle, body.Handle);
 		}
 
@@ -407,6 +415,13 @@ namespace Chipmunk2D
 		[CLink] private static extern void cpSpaceRemoveBody(void* space, void* body);
 		/// Remove a constraint from the simulation.
 		[CLink] private static extern void cpSpaceRemoveConstraint(void* space, void* constraint);
+
+		/// Add a collision shape to the simulation.
+		/// If the shape is attached to a static body, it will be added as a static shape.
+		[CLink] private static extern void* cpSpaceAddShape(void* space, void* shape);
+
+		/// Remove a collision shape from the simulation.
+		[CLink] private static extern void cpSpaceRemoveShape(void* space, void* shape);
 
 		/// Step the space forward in time by @c dt.
 		[CLink] private static extern void cpSpaceStep(void* space, Real dt);

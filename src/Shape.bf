@@ -133,7 +133,6 @@ namespace Chipmunk2D
 
 		public ~this()
 		{
-			cpSpaceRemoveShape(cpShapeGetSpace(handle), handle);
 			cpShapeFree(handle);
 			handle = null;
 		}
@@ -214,9 +213,6 @@ namespace Chipmunk2D
 		{
 			return cpMomentForBox(m, width, height);
 		}
-
-		/// Remove a collision shape from the simulation.
-		[CLink] private static extern void cpSpaceRemoveShape(void* space, void* shape);
 
 		[CLink]
 		private static extern void cpShapeFree(void* shape);

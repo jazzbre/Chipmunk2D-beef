@@ -32,6 +32,8 @@ namespace Chipmunk2D
 		private VelocityDelegate velocityDelegate;
 		private PositionDelegate positionDelegate;
 
+		public List<Shape> Shapes => shapes;
+
 		public BodyType BodyType
 		{
 			get
@@ -284,6 +286,7 @@ namespace Chipmunk2D
 
 		public void RemoveShape(Shape shape)
 		{
+			cpSpaceRemoveShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Remove(shape);
 		}
 
@@ -570,6 +573,9 @@ namespace Chipmunk2D
 		/// Add a collision shape to the simulation.
 		/// If the shape is attached to a static body, it will be added as a static shape.
 		[CLink] private static extern void* cpSpaceAddShape(void* space, void* shape);
+
+		/// Remove a collision shape from the simulation.
+		[CLink] private static extern void cpSpaceRemoveShape(void* space, void* shape);
 
 		/// Allocate and initialize a polygon shape with rounded corners.
 		/// The vertexes must be convex with a counter-clockwise winding.
