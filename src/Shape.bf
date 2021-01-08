@@ -22,6 +22,7 @@ namespace Chipmunk2D
 	abstract class Shape : ObjectBase
 	{
 		public Object UserObject { get; set; }
+		public Body Body { get; private set; }
 
 		public Real Mass
 		{
@@ -125,9 +126,10 @@ namespace Chipmunk2D
 			}
 		}
 
-		public this(void* _handle)
+		public this(void* _handle, Body body)
 		{
 			handle = _handle;
+			Body = body;
 			cpShapeSetUserData(handle, Internal.UnsafeCastToPtr(this));
 		}
 
@@ -349,7 +351,7 @@ namespace Chipmunk2D
 
 		public Real Radius => cpPolyShapeGetRadius(handle);
 
-		public this(void* _handle) : base(_handle)
+		public this(void* _handle, Body body) : base(_handle, body)
 		{
 		}
 
@@ -372,7 +374,7 @@ namespace Chipmunk2D
 
 	class BoxShape : PolyShape
 	{
-		public this(void* _handle) : base(_handle)
+		public this(void* _handle, Body body) : base(_handle, body)
 		{
 		}
 
@@ -383,7 +385,7 @@ namespace Chipmunk2D
 
 		public Real Radius => cpCircleShapeGetRadius(handle);
 
-		public this(void* _handle) : base(_handle)
+		public this(void* _handle, Body body) : base(_handle, body)
 		{
 		}
 
@@ -403,7 +405,7 @@ namespace Chipmunk2D
 
 		public Real Radius => cpSegmentShapeGetRadius(handle);
 
-		public this(void* _handle) : base(_handle)
+		public this(void* _handle, Body body) : base(_handle, body)
 		{
 		}
 

@@ -246,7 +246,7 @@ namespace Chipmunk2D
 
 		public Shape AddBoxShape(Real width, Real height, Real radius)
 		{
-			var shape = new BoxShape(cpBoxShapeNew(handle, width, height, radius));
+			var shape = new BoxShape(cpBoxShapeNew(handle, width, height, radius), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
@@ -254,7 +254,7 @@ namespace Chipmunk2D
 
 		public Shape AddBoxShape(Bounds bounds, Real radius)
 		{
-			var shape = new BoxShape(cpBoxShapeNew2(handle, bounds, radius));
+			var shape = new BoxShape(cpBoxShapeNew2(handle, bounds, radius), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
@@ -262,7 +262,7 @@ namespace Chipmunk2D
 
 		public Shape AddPolyShape(Vector2[] verts, Real radius)
 		{
-			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius));
+			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
@@ -270,7 +270,7 @@ namespace Chipmunk2D
 
 		public Shape AddCircleShape(Real radius, Vector2 offset = Vector2.Zero)
 		{
-			var shape = new CircleShape(cpCircleShapeNew(handle, radius, offset));
+			var shape = new CircleShape(cpCircleShapeNew(handle, radius, offset), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
@@ -278,7 +278,7 @@ namespace Chipmunk2D
 
 		public Shape AddSegmentShape(Vector2 a, Vector2 b, Real radius)
 		{
-			var shape = new SegmentShape(cpSegmentShapeNew(handle, a, b, radius));
+			var shape = new SegmentShape(cpSegmentShapeNew(handle, a, b, radius), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
