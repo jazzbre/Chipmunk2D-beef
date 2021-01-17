@@ -5,7 +5,7 @@ namespace Chipmunk2D
 	[CRepr]
 	struct Bounds
 	{
-		Real l , b , r , t;
+		public Real l, b, r, t;
 
 		public Vector2 Center => Vector2.Lerp(Vector2(l, b), Vector2(r, t), 0.5f);
 
