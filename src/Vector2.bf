@@ -5,7 +5,7 @@ namespace Chipmunk2D
 	[CRepr]
 	struct Vector2
 	{
-		public Real x , y;
+		public Real x, y;
 
 		public static Vector2 Zero = Vector2(0f, 0f);
 		public static Vector2 One = Vector2(1f, 1f);
@@ -92,13 +92,13 @@ namespace Chipmunk2D
 		/// Uses complex number multiplication to rotate v1 by v2. Scaling will occur if v1 is not a unit vector.
 		public static Vector2 Rotate(Vector2 v1, Vector2 v2)
 		{
-			return Vector2(v1.x*v2.x - v1.y*v2.y, v1.x*v2.y + v1.y*v2.x);
+			return Vector2(v1.x * v2.x - v1.y * v2.y, v1.x * v2.y + v1.y * v2.x);
 		}
 
 		/// Inverse of cpvrotate().
 		public static Vector2 Unrotate(Vector2 v1, Vector2 v2)
 		{
-			return Vector2(v1.x*v2.x + v1.y*v2.y, v1.y*v2.x - v1.x*v2.y);
+			return Vector2(v1.x * v2.x + v1.y * v2.y, v1.y * v2.x - v1.x * v2.y);
 		}
 
 		public static Vector2 operator+(Vector2 vec1, Vector2 vec2)
