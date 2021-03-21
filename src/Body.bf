@@ -401,6 +401,13 @@ namespace Chipmunk2D
 			cpBodyUpdatePosition(handle, dt);
 		}
 
+		// Helpers
+		public Real GetKScalarBody(Vector2 point, Vector2 n)
+		{
+			var rcn = Vector2.Cross((point - Position), n);
+			return 1.0f / Mass + rcn * rcn / Moment;
+		}
+
 		/// Rigid body velocity update function type.
 		typealias cpBodyVelocityFuncInternal = function void(void* body, Vector2 gravity, Real damping, Real dt);
 		/// Rigid body position update function type.

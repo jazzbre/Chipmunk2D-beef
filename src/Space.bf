@@ -8,8 +8,6 @@ namespace Chipmunk2D
 		typealias CallbackBool = delegate bool(Arbiter arb);
 		typealias Callback = delegate void(Arbiter arb);
 
-		public uint typeA;
-		public uint typeB;
 		public CallbackBool beginFunc;
 		public CallbackBool preSolveFunc;
 		public Callback postSolveFunc;
@@ -231,11 +229,6 @@ namespace Chipmunk2D
 		private void SetCollisionHandlerInternal(CollisionHandler collisionHandler, cpCollisionHandler* collisionHandlerInternal, bool wildcard = false)
 		{
 			collisionHandlerInternal.userData = Internal.UnsafeCastToPtr(collisionHandler);
-			if (!wildcard)
-			{
-				collisionHandlerInternal.typeA = collisionHandler.typeA;
-				collisionHandlerInternal.typeB = collisionHandler.typeB;
-			}
 			collisionHandlerInternal.beginFunc = => OnBeginFuncCallback;
 			collisionHandlerInternal.preSolveFunc = => OnPreSolveFuncCallback;
 			collisionHandlerInternal.postSolveFunc = => OnPostSolveFuncCallback;
@@ -254,8 +247,6 @@ namespace Chipmunk2D
 
 		public void AddWildcardHandler(CollisionHandler collisionHandler, uint collisionType)
 		{
-			collisionHandler.typeA = collisionType;
-			collisionHandler.typeB = uint32.MaxValue;
 			SetCollisionHandlerInternal(collisionHandler, cpSpaceAddWildcardHandler(handle, collisionType), true);
 		}
 

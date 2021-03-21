@@ -40,6 +40,21 @@ namespace Chipmunk2D
 			}
 		}
 
+		public Vector2 NormalizedSafe
+		{
+			get
+			{
+				var length = Length;
+				if (length > 0.0000001)
+				{
+					return this / length;
+				}
+				return .Zero;
+			}
+		}
+
+		public Vector2 Perpendicular => .(-y, x);
+
 		public this(Real _x = 0.0f, Real _y = 0.0f)
 		{
 			x = _x;
@@ -79,6 +94,11 @@ namespace Chipmunk2D
 			return vec1.x * vec2.x + vec1.y * vec2.y;
 		}
 
+		public static Real Cross(Vector2 v1, Vector2 v2)
+		{
+			return v1.x * v2.y - v1.y * v2.x;
+		}
+
 		public static Vector2 FromAngle(Real angle, Real length = 1.0f)
 		{
 			return Vector2((Real)Math.Cos(angle) * length, (Real)Math.Sin(angle) * length);
@@ -101,6 +121,11 @@ namespace Chipmunk2D
 			return Vector2(v1.x * v2.x + v1.y * v2.y, v1.y * v2.x - v1.x * v2.y);
 		}
 
+		public static Vector2 operator-(Vector2 vec1)
+		{
+			return .(-vec1.x, -vec1.y);
+		}
+
 		public static Vector2 operator+(Vector2 vec1, Vector2 vec2)
 		{
 			return Vector2(vec1.x + vec2.x, vec1.y + vec2.y);
@@ -111,11 +136,13 @@ namespace Chipmunk2D
 			return Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
 		}
 
+		[Commutable]
 		public static Vector2 operator*(Vector2 vec1, Real factor)
 		{
 			return Vector2(vec1.x * factor, vec1.y * factor);
 		}
 
+		[Commutable]
 		public static Vector2 operator/(Vector2 vec1, Real factor)
 		{
 			return Vector2(vec1.x / factor, vec1.y / factor);

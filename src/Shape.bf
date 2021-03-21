@@ -196,6 +196,11 @@ namespace Chipmunk2D
 			return cpMomentForPoly(m, (int32)verts.Count, &verts[0], offset, radius);
 		}
 
+		public static Real MomentForPoly(Real m, Vector2* verts, int count, Vector2 offset, Real radius)
+		{
+			return cpMomentForPoly(m, (int32)count, verts, offset, radius);
+		}
+
 		public static Real AreaForPoly(Vector2[] verts, Real radius)
 		{
 			return cpAreaForPoly((int32)verts.Count, &verts[0], radius);
@@ -209,6 +214,11 @@ namespace Chipmunk2D
 		public static Vector2 CentroidForPoly(Vector2[] verts)
 		{
 			return cpCentroidForPoly((int32)verts.Count, &verts[0]);
+		}
+
+		public static Vector2 CentroidForPoly(Vector2* verts, int count)
+		{
+			return cpCentroidForPoly((int32)count, verts);
 		}
 
 		public static Real MomentForBox(Real m, Real width, Real height)
