@@ -7,5 +7,7 @@ namespace Chipmunk2D
 		protected void* handle = null;
 
 		public void* Handle => handle;
+
+		public bool IsValid => handle != null;
 	}
 }

@@ -47,6 +47,8 @@ namespace Chipmunk2D
 			handle = _handle;
 		}
 
+		public bool IsValid => handle != null;
+
 		public Real Restituion
 		{
 			get
@@ -130,7 +132,7 @@ namespace Chipmunk2D
 		public bool IsRemoval => cpArbiterIsRemoval(handle);
 
 
-		public int Count => cpArbiterGetCount(handle);
+		public int Count => IsValid ? cpArbiterGetCount(handle) : 0;
 
 		public Vector2 Normal => cpArbiterGetNormal(handle);
 

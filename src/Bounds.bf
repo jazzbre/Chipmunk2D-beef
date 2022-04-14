@@ -8,6 +8,7 @@ namespace Chipmunk2D
 		public Real l, b, r, t;
 
 		public Vector2 Center => Vector2.Lerp(Vector2(l, b), Vector2(r, t), 0.5f);
+		public Vector2 Extents => (Vector2(r, t) - Vector2(l, b)) * 0.5;
 
 		/// Returns the area of the bounding box.
 		public Real Area => (r - l) * (t - b);

@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace Chipmunk2D
 {
+	[CRepr]
 	enum BodyType
 	{
 		/// A dynamic body is one that is affected by gravity, forces, and collisions.
