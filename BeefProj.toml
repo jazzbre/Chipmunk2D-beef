@@ -5,16 +5,16 @@ Name = "Chipmunk2D-beef"
 TargetType = "BeefLib"
 
 [Configs.Debug.Win64]
-LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dDebug.lib"]
+LibPaths = ["$(ProjectDir)\\.build\\win64_vs2022\\bin\\chipmunk2dDebug.lib"]
 
 [Configs.Release.Win64]
-LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]
+LibPaths = ["$(ProjectDir)\\.build\\win64_vs2022\\bin\\chipmunk2dRelease.lib"]
 
 [Configs.Paranoid.Win64]
-LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]
+LibPaths = ["$(ProjectDir)\\.build\\win64_vs2022\\bin\\chipmunk2dRelease.lib"]
 
 [Configs.Test.Win64]
-LibPaths = ["$(ProjectDir)\\.build\\win64_vs2019\\bin\\chipmunk2dRelease.lib"]
+LibPaths = ["$(ProjectDir)\\.build\\win64_vs2022\\bin\\chipmunk2dRelease.lib"]
 
 [Configs.Debug.macOS]
 LibPaths = ["$(ProjectDir)\\.build\\osx-x64\\bin\\libchipmunk2dDebug.a"]

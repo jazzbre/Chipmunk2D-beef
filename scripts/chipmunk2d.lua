@@ -24,6 +24,7 @@ project "chipmunk2d"
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpGearJoint.c"),
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpGrooveJoint.c"),
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpHashSet.c"),
+		path.join(SOURCE_DIR, "Chipmunk2D/src/cpMarch.c"),
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpPinJoint.c"),
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpPivotJoint.c"),
 		path.join(SOURCE_DIR, "Chipmunk2D/src/cpPolyShape.c"),

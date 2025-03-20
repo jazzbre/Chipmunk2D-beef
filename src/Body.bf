@@ -261,9 +261,9 @@ namespace Chipmunk2D
 			return shape;
 		}
 
-		public Shape AddPolyShape(Vector2[] verts, Real radius)
+		public Shape AddPolyShape(Span<Vector2> verts, Real radius)
 		{
-			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Count, &verts[0], radius), this);
+			var shape = new PolyShape(cpPolyShapeNewRaw(handle, (int32)verts.Length, &verts[0], radius), this);
 			cpSpaceAddShape(cpBodyGetSpace(handle), shape.Handle);
 			shapes.Add(shape);
 			return shape;
